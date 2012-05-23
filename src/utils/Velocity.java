@@ -30,4 +30,14 @@ public class Velocity
         return y;
     }
 
+    public void setXSpeed(int xSpeed)
+    {
+        x = xSpeed;
+    }
+
+    public void setYSpeed(int ySpeed)
+    {
+        y = ySpeed;
+    }
+
 }

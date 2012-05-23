@@ -22,6 +22,12 @@ public class Coords extends Object {
         this.y = y;
     }
 
+    public Coords(Coords coords)
+    {
+        this.x = coords.getX();
+        this.y = coords.getY();
+    }
+
     public int getX()
     {
         return x;

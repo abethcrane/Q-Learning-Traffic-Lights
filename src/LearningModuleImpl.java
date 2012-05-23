@@ -24,6 +24,7 @@ public class LearningModuleImpl implements LearningModule
     @Override
     public void updateTrafficLights(List<TrafficLight> trafficLights)
     {
+        //So far, naive 'switch at every ten steps' counter
         counter++;
         if (counter == 10)
         {

@@ -29,4 +29,10 @@ public interface RoadMap
 
     //add cars from the given list onto the map
     void addCars(List<Car> cars);
+
+    //returns true if the next unoccupied square in the direction of 'direction' from the position 'start' is a traffic light
+    boolean nextNonCarSquareIsTrafficLight(Coords start, Velocity direction, TrafficLight trafficLight);
+
+    //Returns true if there is a car at the specified coord
+    boolean carAt(Coords coords);
 }

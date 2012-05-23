@@ -15,7 +15,7 @@ Nathan Wilson
 public interface Car
 {
     //Updates the velocity of a car given whether the traffic light is immediately in front and is red
-    void updateVelocity(List<TrafficLight> trafficLightList, RoadMap mapWithCars);
+    void updateVelocity(TrafficLight trafficLight, RoadMap mapWithCars);
 
     //Updates the position of the car by incrementing x/y by velocity x/y
     void updatePosition();

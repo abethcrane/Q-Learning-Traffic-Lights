@@ -43,7 +43,7 @@ public class RoadMapImpl implements RoadMap
 
     public RoadMapImpl(char[][] newGrid)
     {
-        grid = newGrid;
+        grid = copyGrid(newGrid);
         //Manually add entrances to roads
         roadEntrances.add(new Coords(20, 0));
         roadEntrances.add(new Coords(0, 20));
@@ -73,11 +73,10 @@ public class RoadMapImpl implements RoadMap
         //print new grid to screen
         int i,j;
         for( i=0; i < gridSize; i++ ) {
-            System.out.print("|");
             for( j=0; j < gridSize; j++ ) {
                 System.out.print(newGrid[i][j]);
             }
-            System.out.println("|");
+            System.out.println("");
         }
 
         System.out.println("");
@@ -114,8 +113,7 @@ public class RoadMapImpl implements RoadMap
     @Override
     public RoadMap copyMap()
     {
-        char[][] newGrid = new char[gridSize][gridSize];
-        return new RoadMapImpl(newGrid);
+        return new RoadMapImpl(grid);
     }
 
     @Override
@@ -128,6 +126,31 @@ public class RoadMapImpl implements RoadMap
         }
     }
 
+    @Override
+    public boolean nextNonCarSquareIsTrafficLight(Coords start, Velocity direction, TrafficLight trafficLight)
+    {
+        //iterate along all squares in front until you reach an empty square
+        Coords current = new Coords(start.getX(), start.getY());
+        while (current.getX() < gridSize && current.getX() >= 0 &&
+                current.getY() < gridSize && current.getY() >= 0 &&
+                (grid[current.getX()][current.getY()] != ' ') &&
+                !trafficLight.getCoords().equals(current))
+        {
+            current.setX(current.getX() + direction.getXSpeed());
+            current.setY(current.getY() + direction.getYSpeed());
+        }
+
+        //return true if said empty square is a traffic light, false otherwise
+        return trafficLight.getCoords().equals(current);
+
+    }
+
+    @Override
+    public boolean carAt(Coords coords)
+    {
+        return grid[coords.getX()][coords.getY()] == 'C';
+    }
+
     private char[][] copyGrid(char[][] grid)
     {
         char[][] newGrid = new char[gridSize][gridSize];
@@ -136,7 +159,7 @@ public class RoadMapImpl implements RoadMap
         int i,j;
         for( i=0; i < gridSize; i++ ) {
             for( j=0; j < gridSize; j++ ) {
-                newGrid[i][j] = newGrid[i][j];
+                newGrid[i][j] = grid[i][j];
             }
         }
         return newGrid;

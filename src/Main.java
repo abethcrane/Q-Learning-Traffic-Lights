@@ -30,7 +30,7 @@ public class Main
        trafficLights.add(new TrafficLightImpl(new Coords(20,20),false));
 
        //Traffic density threshold - can make this a parameter if we want
-       double trafficDensityThreshold = 0.5;
+       double trafficDensityThreshold = 0.4;
 
        //Initialise 'learner' - if we are resuming from a previous learnt run, we can pass necessary values in here
        LearningModule learningModule = new LearningModuleImpl();
@@ -54,7 +54,8 @@ public class Main
            List<Car> carsToRemove = new ArrayList<Car>();
            for (Car car : cars)
            {
-               car.updateVelocity(trafficLights, mapWithCars);
+               //Just using the first traffic light in list for now because to begin with we know there is only one
+               car.updateVelocity(trafficLights.get(0), mapWithCars);
                car.updatePosition();
                if (car.removeIfOffRoad(map))
                    carsToRemove.add(car);
@@ -65,9 +66,9 @@ public class Main
            for(Coords roadEntrance: map.getRoadEntrances())
            {
                double randomNumber = Math.random();
-               if (randomNumber <= trafficDensityThreshold)
+               if (randomNumber <= trafficDensityThreshold && !mapWithCars.carAt(roadEntrance))
                {
-                   cars.add(new CarImpl(roadEntrance, map.getStartingVelocity(roadEntrance)));
+                   cars.add(new CarImpl(new Coords(roadEntrance), map.getStartingVelocity(roadEntrance)));
                }
            }
 
