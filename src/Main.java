@@ -33,6 +33,8 @@ public class Main
        double trafficDensityThreshold = 0.4;
 
        //Initialise 'learner' - if we are resuming from a previous learnt run, we can pass necessary values in here
+       
+       // pass in a traffic light
        LearningModule learningModule = new LearningModuleImpl();
 
        //While loop for a set number of time steps (say 100  - can make this an argument to our program if necessary)
@@ -48,7 +50,10 @@ public class Main
 
            //Change traffic lights - we will probably add parameters and things here,
            //     or change things in the traffic light class so that they know more about cars approaching, etc
-           learningModule.updateTrafficLights(trafficLights);
+           
+
+            // pass in one traffic light
+           learningModule.learn(trafficLights);
 
            //Move cars currently on map
            List<Car> carsToRemove = new ArrayList<Car>();
