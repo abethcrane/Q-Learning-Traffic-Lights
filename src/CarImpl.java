@@ -28,10 +28,14 @@ public class CarImpl implements Car
             startingVelocity.getXSpeed(), startingVelocity.getYSpeed());
     }
 
-    @Override // wtf does this actually overrride?
+    @Override
     public void updateVelocity(TrafficLight l, RoadMap m)
     {
         // incorrect: moving in the x-direction is to move horizontally
+            //clarification: when I made the class, i used standard (x, y) ordering in the coordinates. However because
+            //I printed out first looping through x then y, this actually resulted in x referring to the rows and y to
+            // the columns, resulting in an increase in x being a movement downwards. You are correct that this is
+            // counterintuitive. I cbf changing it though, feel free to if it bothers you :)
         boolean stop = 
             m.nextNonCarSquareIsTrafficLight(position, direction, l) &&
             (direction.getXSpeed() !=0 ) == l.horizontalGreen();
@@ -39,21 +43,21 @@ public class CarImpl implements Car
         velocity.setYSpeed(stop ? 0 : direction.getYSpeed());
     }
 
-    @Override // ??
+    @Override
     public void updatePosition()
     {
         position.setX(position.getX() + velocity.getXSpeed());
         position.setY(position.getY() + velocity.getYSpeed());
     }
 
-    @Override // ??
+    @Override
     public Coords getCoords()
     {
          return position;
     }
 
-    @Override // ??
-    public boolean removeIfOffRoad(RoadMap map) // misleading name
+    @Override
+    public boolean hasLeftMap(RoadMap map)
     {
         return
             position.getX() < 0 || position.getX() >= 40 ||

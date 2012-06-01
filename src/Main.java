@@ -65,7 +65,7 @@ public class Main
                 // FIXME: assumes map contains a single light
                 car.updateVelocity(trafficLights.get(0), currentState);
                 car.updatePosition();
-                if (car.removeIfOffRoad(map))
+                if (car.hasLeftMap(map))
                 {
                      carsToRemove.add(car);
                 }

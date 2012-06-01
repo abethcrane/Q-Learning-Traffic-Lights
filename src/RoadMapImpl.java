@@ -20,6 +20,7 @@ import utils.Coords;
 import utils.Velocity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -33,9 +34,7 @@ public class RoadMapImpl implements RoadMap {
     private List<Coords> roadEntrances = new ArrayList<Coords>();
 
     RoadMapImpl() {
-        for (Coords c : defaultEntrances) {
-            roadEntrances.add(c);
-        }
+        Collections.addAll(roadEntrances, defaultEntrances);
         grid = new char[gridSize][gridSize];
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
@@ -60,12 +59,10 @@ public class RoadMapImpl implements RoadMap {
     //
     public RoadMapImpl(char[][] newGrid) {
         grid = copyGrid(newGrid);
-        for (Coords c : defaultEntrances) {
-            roadEntrances.add(c);
-        }
+        Collections.addAll(roadEntrances, defaultEntrances);
     }
 
-    @Override // I'm guessing `print' is actually defined for Object?
+    @Override
     public void print(List<Car> cars, List<TrafficLight> trafficLights) {
         //copy grid and place cars onto it
         char[][] newGrid = copyGrid(grid);
@@ -142,7 +139,7 @@ public class RoadMapImpl implements RoadMap {
         return hash;
     }
 
-    @Override // ??
+    @Override
     public List<Coords> getRoadEntrances() {
         return roadEntrances;
     }

@@ -23,5 +23,5 @@ public interface Car
     Coords getCoords();
 
     //flag to remove the car if it has left the road
-    boolean removeIfOffRoad(RoadMap map);
+    boolean hasLeftMap(RoadMap map);
 }

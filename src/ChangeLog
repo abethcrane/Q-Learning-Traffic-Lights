@@ -1,3 +1,19 @@
+2012-06-01 10:41 pm Nathan
+responding to changes below:
+	- gave up adding "??" comments every time I saw an @Override
+	  that didn't appear to override anything
+	    -clarifying - @Override is placed there when I automatically generate these methods from the interface. (I can hit alt enter and my IDE creates them for me)
+	                  You are correct, they are unnecessary in most cases, but my IDE places them there regardless, and it was easier for me to just leave them
+	                  When I worked at atlassian this was also common practice because they do no harm and they do help convey that this method is not the base method.
+	                  I believe (might be wrong) that doing this also helps to link this method to the base method in the interface for javadoc purposes (i know we arent
+	                  doing javadocs but old habits die hard)
+    - changed gridSize to be public final
+        - why? I have always been taught that interior fields should not, as a rule, be made available publicly
+    	    except through getters and setters
+	- suggested renaming `removeIfOffRoad' but then did nothing
+	  about it
+	    - I have renamed this to 'hasLeftMap' - hopefully connotates the intention of the method a bit better
+
 2012-06-01 03:38:32 Gill
 	* Action.java: now exists
 
