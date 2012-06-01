@@ -20,7 +20,7 @@ public interface Car
     //Updates the position of the car by incrementing x/y by velocity x/y
     void updatePosition();
 
-    Coords getPosition();
+    Coords getCoords();
 
     //flag to remove the car if it has left the road
     boolean removeIfOffRoad(RoadMap map);

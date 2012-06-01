@@ -11,5 +11,11 @@ import java.util.List;
 //Contains the logic for our reinforcement learning.
 public interface LearningModule
 {
-    void updateTrafficLights(List<TrafficLight> trafficLights);
+    void updateTrafficLights
+    (
+            RoadMap mapWithCars, 
+            List<TrafficLight> trafficLights
+    );
+
+    void learn(RoadMap currentMapWithCars, RoadMap nextMapWithCars);
 }

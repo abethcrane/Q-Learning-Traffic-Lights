@@ -6,6 +6,12 @@ Gill Morris
 Nathan Wilson
  */
 
+// The intention is to change every occurrence of
+// (List<Cars> cars, List<TrafficLights> trafficLights
+// to
+// State s
+// Ceebs now.
+
 import interfaces.Car;
 import interfaces.RoadMap;
 import interfaces.TrafficLight;
@@ -18,71 +24,84 @@ import java.util.List;
 //Roadmap Implementation class - implements methods from interfaces.RoadMap
 public class RoadMapImpl implements RoadMap
 {
+    public final int gridSize = 40;
+    private final Coords[] defaultEntrances =
+        {new Coords(0, gridSize/2), new Coords(gridSize/2, 0)};
+    private final char carChar = 'C';
     private char[][] grid;
-    int gridSize = 40;
     private List<Coords> roadEntrances = new ArrayList<Coords>();
 
     RoadMapImpl()
     {
+        for (Coords c : defaultEntrances)
+        {
+            roadEntrances.add(c);
+        }
         grid = new char[gridSize][gridSize];
         for (int i = 0; i < gridSize; i++)
         {
             for (int j = 0; j < gridSize; j++)
             {
                 grid[i][j] = 'x';
-                if (i == (gridSize/2) || j == (gridSize/2))
+                for (Coords k : roadEntrances)
                 {
-                    grid[i][j] = ' ';
+                    if (
+                        (i > 0 && i == k.getX()) || 
+                        (j > 0 && j == k.getY())
+                    ) {
+                        grid[i][j] = ' ';
+                    }
                 }
             }
         }
-        //Manually add entrances to roads
-        roadEntrances.add(new Coords(20, 0));
-        roadEntrances.add(new Coords(0, 20));
     }
 
+    // TODO: I feel this should read
+    // public RoadMapImpl(char[][] newGrid, List<Coords> entrances)
+    // {
+    //     ...
+    //     for (Coords c : entrances)
+    //     {
+    //         ...
+    //
     public RoadMapImpl(char[][] newGrid)
     {
         grid = copyGrid(newGrid);
-        //Manually add entrances to roads
-        roadEntrances.add(new Coords(20, 0));
-        roadEntrances.add(new Coords(0, 20));
+        for (Coords c : defaultEntrances)
+        {
+            roadEntrances.add(c);
+        }
     }
 
-    @Override
+    @Override // I'm guessing `print' is actually defined for Object?
     public void print(List<Car> cars, List<TrafficLight> trafficLights)
     {
         //copy grid and place cars onto it
         char[][] newGrid = copyGrid(grid);
         for (Car car : cars)
         {
-            newGrid[car.getPosition().getX()][car.getPosition().getY()] = 'C';
+            int x=car.getCoords().getX(), y=car.getCoords().getY();
+            newGrid[x][y] = carChar;
         }
         for(TrafficLight light : trafficLights)
         {
-            if (light.horizontalGreen())
-            {
-                newGrid[light.getCoords().getX()][light.getCoords().getY()] = '>';
-            }
-            else
-            {
-                newGrid[light.getCoords().getX()][light.getCoords().getY()] = 'v';
-            }
+            int x=light.getCoords().getX(), y=light.getCoords().getY();
+            newGrid[x][y] = light.horizontalGreen() ? '>' : 'v';
         }
 
         //print new grid to screen
-        int i,j;
-        for( i=0; i < gridSize; i++ ) {
-            for( j=0; j < gridSize; j++ ) {
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
                 System.out.print(newGrid[i][j]);
             }
-            System.out.println("");
+            System.out.println();
         }
-
-        System.out.println("");
+        System.out.println();
     }
 
-    @Override
+    @Override // ??
     public List<Coords> getRoadEntrances()
     {
         return roadEntrances;
@@ -119,17 +138,18 @@ public class RoadMapImpl implements RoadMap
     @Override
     public void addCars(List<Car> cars)
     {
-        //place cars onto grid
-        for (Car car : cars)
+        for (Car c : cars)
         {
-            grid[car.getPosition().getX()][car.getPosition().getY()] = 'C';
+            grid[c.getCoords().getX()][c.getCoords().getY()] = carChar;
         }
     }
 
     @Override
-    public boolean nextNonCarSquareIsTrafficLight(Coords start, Velocity direction, TrafficLight trafficLight)
-    {
-        //iterate along all squares in front until you reach an empty square
+    public boolean nextNonCarSquareIsTrafficLight(
+            Coords start, 
+            Velocity direction, 
+            TrafficLight trafficLight
+    ) {
         Coords current = new Coords(start.getX(), start.getY());
         while (current.getX() < gridSize && current.getX() >= 0 &&
                 current.getY() < gridSize && current.getY() >= 0 &&
@@ -140,7 +160,6 @@ public class RoadMapImpl implements RoadMap
             current.setY(current.getY() + direction.getYSpeed());
         }
 
-        //return true if said empty square is a traffic light, false otherwise
         return trafficLight.getCoords().equals(current);
 
     }
@@ -148,7 +167,7 @@ public class RoadMapImpl implements RoadMap
     @Override
     public boolean carAt(Coords coords)
     {
-        return grid[coords.getX()][coords.getY()] == 'C';
+        return grid[coords.getX()][coords.getY()] == carChar;
     }
 
     private char[][] copyGrid(char[][] grid)
@@ -156,9 +175,10 @@ public class RoadMapImpl implements RoadMap
         char[][] newGrid = new char[gridSize][gridSize];
 
         //explicit copy so array is not a reference to previous array
-        int i,j;
-        for( i=0; i < gridSize; i++ ) {
-            for( j=0; j < gridSize; j++ ) {
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
                 newGrid[i][j] = grid[i][j];
             }
         }
