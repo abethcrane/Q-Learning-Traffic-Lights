@@ -80,13 +80,11 @@ public class RoadMapImpl implements RoadMap
 	{
 		//copy grid and place cars onto it
 		char[][] newGrid = copyGrid(grid);
-		for (Car car : cars)
-		{
+		for (Car car : cars) {
 			int x=car.getCoords().getX(), y=car.getCoords().getY();
 			newGrid[x][y] = carChar;
 		}
-		for(TrafficLight light : trafficLights)
-		{
+		for(TrafficLight light : trafficLights) {
 			int x=light.getCoords().getX(), y=light.getCoords().getY();
 			newGrid[x][y] = light.horizontalGreen() ? '>' : 'v';
 		}
@@ -223,7 +221,13 @@ public class RoadMapImpl implements RoadMap
 	@Override
 	public boolean carAt(Coords coords)
 	{
-		return grid[coords.getX()][coords.getY()] == carChar;
+		boolean result = false;
+		if (coords.getX() >= 0 && coords.getY() >= 0 && coords.getX() < gridSize && coords.getY() < gridSize ){
+			if (grid[coords.getX()][coords.getY()] == carChar) {
+				result = true;
+			}
+		}
+		return result;
 	}
 
 	private char[][] copyGrid(char[][] grid)
@@ -240,4 +244,5 @@ public class RoadMapImpl implements RoadMap
 		}
 		return newGrid;
 	}
+	
 }

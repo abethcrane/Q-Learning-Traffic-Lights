@@ -23,7 +23,7 @@ public class LearningModuleImpl implements LearningModule
     private static final int numRoads = 2;
     private static final int numStates = 
             (int)java.lang.Math.pow(numCarSpaces,numRoads) * numActions;
-    private static final int arraySize = 10000; // 5 digit hashCodes
+    private static final int arraySize = 100000; // 5 digit hashCodes
     private static final int numTrafficLights = 2; // modify this
     // FIXME: {alpha, gamma, epsilon} are probably dependent - how?
     private static final float epsilon = (float)0.1;
@@ -33,13 +33,19 @@ public class LearningModuleImpl implements LearningModule
 
 	private int counter;
 	// TODO: MERGING
-    private Action lastAction;
+    private ActionImpl lastAction = new ActionImpl();
     private ArrayList<Float> qValues = new ArrayList<Float>(arraySize);
    	private ActionImpl[] actions = new ActionImpl[numActions];
 	private int[] prevReward = new int[numTrafficLights];
 
 	LearningModuleImpl() {
 		counter = 0;
+		actions[0] = new ActionImpl(false);
+		actions[1] = new ActionImpl(true);
+		for (int i = 0; i < arraySize; i++) {
+			
+			qValues.add(i,(float)0.0);
+		}
 	}
 
 	@Override
@@ -109,7 +115,7 @@ public class LearningModuleImpl implements LearningModule
 	}
 
 	public ActionImpl getAction (RoadMap r, TrafficLight t) {
-		ActionImpl a;
+		ActionImpl a = new ActionImpl();
 
 		float highestQ = 0;
 		Action highestAction = new ActionImpl();
