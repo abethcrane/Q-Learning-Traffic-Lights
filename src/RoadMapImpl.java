@@ -14,12 +14,14 @@ Nathan Wilson
 
 import interfaces.Car;
 import interfaces.RoadMap;
+import interfaces.Action;
 import interfaces.TrafficLight;
 import utils.Coords;
 import utils.Velocity;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 //Roadmap Implementation class - implements methods from interfaces.RoadMap
 public class RoadMapImpl implements RoadMap
@@ -101,7 +103,27 @@ public class RoadMapImpl implements RoadMap
         System.out.println();
     }
 
-    @Override // ??
+    @Override
+    // Hash = 5 digit number (longer if more roads are added)
+    /*
+    1st - closest car position from intersection for road 1 (0-8, 9 if no cars) X
+    2nd - closest car position from intersection for road 2 (0-8, 9 if no cars X
+    3rd - light setting (ie 0-green, 1 red for one of the roads) X
+    4th - light delay (0-3)
+    5th - action (0-1)
+     */
+    // Needs to take in traffic light so it can tell which one to work the things out for
+	public int hashCode(TrafficLight t, Action a) {
+		// For each road off the traffic lights
+    	// Follow it back until we hit either 9 or a car
+    	// Mark that place
+    	
+    	
+    	int hash = 0;
+    	return hash;
+	}
+
+	@Override // ??
     public List<Coords> getRoadEntrances()
     {
         return roadEntrances;

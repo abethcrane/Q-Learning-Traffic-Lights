@@ -17,5 +17,7 @@ public interface LearningModule
             List<TrafficLight> trafficLights
     );
 
-    void learn(RoadMap currentMapWithCars, RoadMap nextMapWithCars);
+    //void learn(RoadMap currentMapWithCars, RoadMap nextMapWithCars);
+
+	void learn(RoadMap s, RoadMap sPrime, List<TrafficLight> trafficLights);
 }

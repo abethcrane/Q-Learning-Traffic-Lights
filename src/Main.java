@@ -45,6 +45,7 @@ public class Main
         // - move cars in their current direction by velocity (modify 
         //   velocity if necessary - using CarAI)
         // - spawn cars at extremities
+        // Now that we have the new state, update the qvalue for the previous s,a pair
         for (int timeToRun = 0; timeToRun < 100; ++timeToRun)
         {
             RoadMap currentState = map.copyMap();
@@ -88,20 +89,19 @@ public class Main
             }
 
             nextState.addCars(cars);
-            learningModule.learn(currentState, nextState);
-            for (TrafficLight light : trafficLights)
-            {
+            
+            
+            learningModule.learn(currentState, nextState, trafficLights);
+            for (TrafficLight light : trafficLights) {
                 light.clock();
             }
 
             //Next iteration
             map.print(cars, trafficLights);
-            try
-            {
+            try {
                 Thread.sleep(1000);
             }
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

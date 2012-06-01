@@ -35,4 +35,6 @@ public interface RoadMap
 
     //Returns true if there is a car at the specified coord
     boolean carAt(Coords coords);
+
+	int hashCode(TrafficLight t, Action a);
 }

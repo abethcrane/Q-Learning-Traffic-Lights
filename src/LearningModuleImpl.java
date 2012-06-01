@@ -4,61 +4,139 @@ Major Project - Traffic Lights Reinforcement Learning
 Beth Crane
 Gill Morris
 Nathan Wilson
-*/
+ */
 
 import interfaces.LearningModule;
 import interfaces.TrafficLight;
 import interfaces.RoadMap;
+import interfaces.Action;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class LearningModuleImpl implements LearningModule
 {
-    /* TODO:  MERGING
+	// TODO:  MERGING
     private static final int numCarSpaces = 9;
     private static final int numActions = 2;
     private static final int numRoads = 2;
     private static final int numStates = 
             (int)java.lang.Math.pow(numCarSpaces,numRoads) * numActions;
+    private static final int arraySize = 10000; // 5 digit hashCodes
+    private static final int numTrafficLights = 2; // modify this
     // FIXME: {alpha, gamma, epsilon} are probably dependent - how?
-    private static final float epsilon = 0.1;
-    private static final float gamma = 0.9;
-    private static final float alpha = 0.1;
-    */
+    private static final float epsilon = (float)0.1;
+    private static final float gamma = (float)0.9;
+    private float alpha = (float)0.1;
+	
 
-    private int counter;
-    /* TODO: MERGING
+	private int counter;
+	// TODO: MERGING
     private Action lastAction;
-    private ArrayList<float> qValues;
-    */
+    private ArrayList<Float> qValues = new ArrayList<Float>(arraySize);
+   	private ActionImpl[] actions = new ActionImpl[numActions];
+	private int[] prevReward = new int[numTrafficLights];
 
-    LearningModuleImpl()
-    {
-        counter = 0;
-    }
+	LearningModuleImpl() {
+		counter = 0;
+	}
 
-    @Override
-    public void updateTrafficLights(
-            RoadMap mapWithCars,
-            List<TrafficLight> trafficLights
-    ) {
-        //So far, naive 'switch at every ten steps' counter
-        //disregards the actual state of the road
-        counter++;
-        if (counter == 10)
-        {
-            for (TrafficLight light : trafficLights)
-            {
-                light.switchLight();
-            }
-            counter = 0;
-        }
-    }
+	@Override
+	public void updateTrafficLights(
+			RoadMap r,
+			List<TrafficLight> trafficLights
+			) {
+		/*
+		//So far, naive 'switch at every ten steps' counter
+		//disregards the actual state of the road
+		counter++;
+		if (counter == 10) {
+			for (TrafficLight light : trafficLights) {
+				light.switchLight();
+			}
+			counter = 0;
+		}
+		*/
+		// Less naive, using the optimal policy (i.e. best q-value)
+		int trafficLightNum = 0; 
+		for (TrafficLight t : trafficLights) {
+			Action a = getAction(r, t);
+			if (a.action()) { // if we add more actions, change this
+				t.switchLight();
+			}   
+			// Going to need a queue of these
+			prevReward[trafficLightNum] = reward(r, t); // is this r(s) or r(s')?
+			trafficLightNum++;
+		}
+		
+	}
 
-    @Override
-    public void learn(RoadMap s, RoadMap sPrime)
-    {
-        //uses a = lastAction
-        //currently doesn't learn a lot
-    }
+	@Override
+	public void learn(RoadMap s, RoadMap sPrime, List<TrafficLight> trafficLights) {
+		//uses a = lastAction
+		//currently doesn't learn a lot
+		
+		
+		updateAlpha();
+		//use old hashcode and current state
+		 int trafficLightNum = 0;
+		 for (TrafficLight t: trafficLights) {
+			float newQValue = ((1 - alpha) * qValues.get(s.hashCode(t, lastAction))) + (alpha * (prevReward[trafficLightNum] + (gamma * getMaxQValue(sPrime, t))));
+			qValues.set(s.hashCode(t, lastAction), newQValue);
+			trafficLightNum++; 
+		}
+		
+	}
+
+	public float getMaxQValue (RoadMap sPrime, TrafficLight t) {
+		Action a;
+		float highestQ = 0;
+		for (int i = 0; i < numActions; i++) {
+			a = actions[i];
+			if (qValues.get(sPrime.hashCode(t,a)) > highestQ) {
+				highestQ = qValues.get(sPrime.hashCode(t,a));
+			}
+		}  
+
+		return highestQ;      
+	}
+
+	//Reward -1.0 if a car is stopped at a red light on either road, zero otherwise.
+	public int reward(RoadMap r, TrafficLight t) {
+		// work this out based on the cars array of the traffic light
+		return 0;
+	}
+
+	public ActionImpl getAction (RoadMap r, TrafficLight t) {
+		ActionImpl a;
+
+		float highestQ = 0;
+		Action highestAction = new ActionImpl();
+		for (int i = 0; i < numActions; i++) {
+			a = actions[i];
+			if (qValues.get(r.hashCode(t,a)) > highestQ) {
+				highestQ = qValues.get(r.hashCode(t,a));
+				highestAction = a;
+			}
+		}
+
+		Random rand = new Random();
+		float probability = rand.nextFloat();
+
+		// If our probability is less than epsilon we return a different action
+		// Picking between them with uniform probability
+		if (probability <= epsilon) {
+			highestAction = actions[rand.nextInt(numActions)];
+		}
+
+		return (ActionImpl) highestAction;
+	}
+
+	public void updateAlpha () {
+		// potentially update ALPHA
+		alpha = alpha;
+	}
+
+
 }
