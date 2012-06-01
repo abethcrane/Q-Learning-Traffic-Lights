@@ -1,0 +1,55 @@
+2012-06-01 03:38:32 Gill
+	* Action.java: now exists
+
+	* TrafficLight.java: added method `clock'
+
+	* Main.java: adheres to the updated TrafficLight and 
+	             LearnerModule interfaces.
+
+	* LearningModule.java: started merging aforementioned code from 
+	                       beth's TrafficLight into LearningModule.
+	                       not finished so the new code is commented.
+
+2012-06-01 01:00:00 Gill
+	* .: clarification: from the first bit of code I read I 
+	     concluded that for loops are written "for (T t : C)\n{". 
+
+	* ChangeLog: now exists.
+
+	* CarImpl.java:
+	- changed position, velocity and direction to be private
+	- removed the restriction that direction is 1 or -1
+	- in function `updateVelocity':
+	    - highlighted a quirk regarding 'horizontal' and
+	      'vertical' but then did nothing about it
+	    - reformatted so it fits on my screen
+	    - changed the commentary somewhat
+	- renamed `getPosition' to `getCoords' to be consistent with
+	  class `TrafficLight'
+	- suggested renaming `removeIfOffRoad' but then did nothing
+	  about it
+
+	* RoadMapImpl.java:
+	- changed gridSize to be public final
+	- defined private final char carChar = 'C'
+	- added a defaultEntrances array
+	    - modified code throughout file to use this 
+	      appropriately
+	- in function `print':
+	    - reformatted so it fits on my screen
+	    - changed bottom for loop to be consistent with the rest of
+	      the project
+	- minor reformatting to `addCars' and `nextNonCarSquare...'
+	- gave up adding "??" comments every time I saw an @Override
+	  that didn't appear to override anything
+
+	* Main.java:
+	- formatting
+	- reformatted some things
+	- adjusted the layout of function `main'
+
+	* LearningModule.java: now features a `learn' method which 
+	should be called after the effects of `updateTrafficLights' 
+	have been implemented. Changed signature of 
+	`updateTrafficLights'.
+
