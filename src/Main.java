@@ -29,6 +29,9 @@ public class Main
 
         //Initialise map, list of cars currently on map, and list of 
         //trafficlights
+    	
+    	int runTime = 10000;
+    	
         RoadMap map = new RoadMapImpl();
         List<Car> cars = new ArrayList<Car>();
         List<TrafficLight> trafficLights = 
@@ -46,12 +49,12 @@ public class Main
         //   velocity if necessary - using CarAI)
         // - spawn cars at extremities
         // Now that we have the new state, update the qvalue for the previous s,a pair
-        for (int timeToRun = 0; timeToRun < 100; ++timeToRun)
-        {
+        for (int timeToRun = 0; timeToRun < runTime; ++timeToRun) {
             RoadMap currentState = map.copyMap();
             RoadMap nextState = map.copyMap();
             currentState.addCars(cars);
 
+            // Update the traffic lights - switch or stay
             learningModule.updateTrafficLights(
                 currentState, trafficLights);
 
@@ -90,7 +93,7 @@ public class Main
 
             nextState.addCars(cars);
             
-            
+            // Updates q-values
             learningModule.learn(currentState, nextState, trafficLights);
             for (TrafficLight light : trafficLights) {
                 light.clock();
