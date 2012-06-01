@@ -38,6 +38,7 @@ public class Main
                 new ArrayList<TrafficLight>();
         trafficLights.add(
                 //FIXME: s|20|gridSize/2 but thats in RoadMap
+                //    - no, we arent always going to have one traffic light in the map centre. when we have 4 for example
                 new TrafficLightImpl(new Coords(20,20),false));
         double trafficDensityThreshold = 0.4;
         LearningModule learningModule = new LearningModuleImpl();
@@ -51,18 +52,36 @@ public class Main
         // Now that we have the new state, update the qvalue for the previous s,a pair
         for (int timeToRun = 0; timeToRun < runTime; ++timeToRun) {
             RoadMap currentState = map.copyMap();
-            RoadMap nextState = map.copyMap();
             currentState.addCars(cars);
+            List<Integer> switchedLights;
+            List<Integer> states = new ArrayList<Integer>();
+            List<Integer> nextStates = new ArrayList<Integer>();
+            List<Integer> rewards = new ArrayList<Integer>();
+
+            //Two different modes - while learning, and after learning
+            //While learning we determine switching randomly and make the algorithm 'learn' qvalues
+            //After learning we determine switching using above qvalues
 
             // Update the traffic lights - switch or stay
-            learningModule.updateTrafficLights(
-                currentState, trafficLights);
+            if (timeToRun <= 100000) {
+                //Get integer representing state BEFORE cars are moved and lights are switched
+                for (TrafficLight light: trafficLights) {
+                    states.add(currentState.stateCode(light));
+                }
+                //returns a list of true/false that the lights were switched for learning purposes
+                switchedLights = learningModule.updateTrafficLights(
+                    currentState, trafficLights);
+            } else {
+                switchedLights = learningModule.updateTrafficLights(
+                        currentState, trafficLights);
+            }
+            RoadMap nextState = currentState.copyMap();
 
             //Move cars currently on map
             List<Car> carsToRemove = new ArrayList<Car>();
             for (Car car : cars)
             {
-                // FIXME: assumes map contains a single light
+                // FIXME: assumes map contains a single light (will fix when we add lights)
                 car.updateVelocity(trafficLights.get(0), currentState);
                 car.updatePosition();
                 if (car.hasLeftMap(map))
@@ -79,10 +98,6 @@ public class Main
                     Math.random() <= trafficDensityThreshold &&
                     !currentState.carAt(roadEntrance)
                 ) {
-                    // TODO: if currentState.carAt(roadEntrance) we
-                    // should probably model that there's a queue
-                    // outside the map and/or fail our traffic light
-                    // learner
                     cars.add(new CarImpl
                     (
                         new Coords(roadEntrance),
@@ -90,11 +105,20 @@ public class Main
                     ));
                 }
             }
-
             nextState.addCars(cars);
             
             // Updates q-values
-            learningModule.learn(currentState, nextState, trafficLights);
+            //Learns for first 100,000 only
+            if (timeToRun <= 100000)
+            {
+                //calculate reward and state code for each traffic light
+                for (TrafficLight light : trafficLights) {
+                    rewards.add(learningModule.reward(nextState, light));
+                    nextStates.add(nextState.stateCode(light));
+                }
+                //To learn we need to pass through - previous states, actions taken, rewards
+                learningModule.learn(states, switchedLights, rewards, nextStates, trafficLights);
+            }
             for (TrafficLight light : trafficLights) {
                 light.clock();
             }

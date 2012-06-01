@@ -36,5 +36,6 @@ public interface RoadMap
     //Returns true if there is a car at the specified coord
     boolean carAt(Coords coords);
 
-	int hashCode(TrafficLight t, Action a);
+    //This is not a hashcode, a hashcode is a code returned by an object to uniquely represent itself and does not take parameters
+	int stateCode(TrafficLight t);
 }
