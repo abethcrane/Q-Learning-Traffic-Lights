@@ -10,15 +10,13 @@ import interfaces.TrafficLight;
 import utils.Coords;
 
 //Contains implementation of methods in interfaces.TrafficLight
-public class TrafficLightImpl implements TrafficLight
-{
+public class TrafficLightImpl implements TrafficLight {
     private final int maxDelay = 3;
     private Coords coords;
     private boolean horizontalGreen;
     private int delay;
 
-    public TrafficLightImpl(Coords coords, boolean horizontalGreen)
-    {
+    public TrafficLightImpl(Coords coords, boolean horizontalGreen) {
         this.coords = coords;
         this.horizontalGreen = horizontalGreen;
     }
@@ -31,27 +29,22 @@ public class TrafficLightImpl implements TrafficLight
     	}
     }
 
-    public Coords getCoords()
-    {
+    public Coords getCoords() {
         return coords;
     }
 
-    public int getDelay() 
-    {
+    public int getDelay()  {
         return delay;
     }
 
-    public void clock()
-    {
-        if (delay > 0)
-        {
+    public void clock() {
+        if (delay > 0) {
             delay--;
         }
     }
 
     @Override
-    public boolean horizontalGreen()
-    {
+    public boolean horizontalGreen() {
         return horizontalGreen;
     }
 }

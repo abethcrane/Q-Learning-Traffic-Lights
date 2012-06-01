@@ -124,7 +124,6 @@ public class LearningModuleImpl implements LearningModule
     	// hence 0_0__ = car stopped at horizontal road
     	// hence _01__ = car stopped at vertical road
     	
-    	
     	int rewardNum = 0;
 
     	// Doesn't matter what the action is, need it to get the hash    	
