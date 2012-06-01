@@ -133,7 +133,7 @@ public class RoadMapImpl implements RoadMap
         
         Coords c = new Coords(t.getCoords());
         int i;
-        // Road one we'll go horizontally
+        // Road one we'll go vertically
         for (i = 0; i < 9; i++) {
             c.setX(c.getX()-1);
             if (carAt(c)) {
@@ -143,7 +143,7 @@ public class RoadMapImpl implements RoadMap
         hash += 1000*i;
         
         c = new Coords(t.getCoords());
-        // Road two we'll go vertically
+        // Road two we'll go horizontally
         for (i = 0; i < 9; i++) {
             c.setY(c.getY()-1);
             if (carAt(c)) {

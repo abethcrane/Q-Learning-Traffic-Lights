@@ -24,9 +24,11 @@ public class TrafficLightImpl implements TrafficLight
     }
 
     @Override
-    public void switchLight()
-    {
-        horizontalGreen = !horizontalGreen;
+    public void switchLight() {
+    	if (getDelay() == 0) {
+    		horizontalGreen = !horizontalGreen;
+    		delay = maxDelay;
+    	}
     }
 
     public Coords getCoords()

@@ -30,7 +30,7 @@ public class Main
         //Initialise map, list of cars currently on map, and list of 
         //trafficlights
     	
-    	int runTime = 10000;
+    	int runTime = 1001000;
     	
         RoadMap map = new RoadMapImpl();
         List<Car> cars = new ArrayList<Car>();
@@ -99,13 +99,15 @@ public class Main
                 light.clock();
             }
 
-            //Next iteration
-            map.print(cars, trafficLights);
-            try {
-                Thread.sleep(1000);
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
+            //Learns 1000000 time steps and then lets us watch it
+            if (timeToRun > 1000000) {
+	            map.print(cars, trafficLights);
+	            try {
+	                Thread.sleep(1000);
+	            }
+	            catch (InterruptedException e) {
+	                e.printStackTrace();
+	            }
             }
         }
     }

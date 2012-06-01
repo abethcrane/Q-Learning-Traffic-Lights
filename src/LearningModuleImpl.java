@@ -40,10 +40,9 @@ public class LearningModuleImpl implements LearningModule
 
     LearningModuleImpl() {
         counter = 0;
-        actions[0] = new ActionImpl(false);
-        actions[1] = new ActionImpl(true);
+        actions[0] = new ActionImpl(true);
+        actions[1] = new ActionImpl(false);
         for (int i = 0; i < arraySize; i++) {
-
             qValues.add(i,(float)0.0);
         }
     }
@@ -116,21 +115,37 @@ public class LearningModuleImpl implements LearningModule
         //1st 0 = 4 digits
        // 2nd 0  = fine
         //1st and 2nd 0 =3 digits
-    	// Doesn't matter what the action is, need it to get the hash
+
+        // Also need to check if it's stopped at a red light, not just stopped    	
+    	
+    	//__1__ = horizontal green
+    	// 0____ = car at 0 on horizontal
+    	//_0___ = car at 0 on vertical
+    	// hence 0_0__ = car stopped at horizontal road
+    	// hence _01__ = car stopped at vertical road
+    	
     	
     	int rewardNum = 0;
-    	
+
+    	// Doesn't matter what the action is, need it to get the hash    	
     	ActionImpl a = new ActionImpl(false);
         int hashCode = r.hashCode(t,a);
+
         // If it's 3 digits both roads have a car at 0
         if (hashCode / 1000 == 0) {
         	rewardNum = -1;
-        // If it's 4 digits one road has a car at 0		
+        // If it's 4 digits horizontal road has car at 0
+        // Hence we check if the light is 0 (red for horizontal)
         } else if (hashCode/10000 == 0) {
-        	rewardNum = -1;
-        // Else if the second digit is 0 there's a car at one of the roads
+        	if ((hashCode/100)%10 == 0) {
+        		rewardNum = -1;
+        	}
+        // Else if the second digit is 0 there's a car at the vertical road
+        // Hence we check if the light is 1 (red for vertical)
         } else if ((hashCode/1000)%10 == 0) {
-        	rewardNum = -1;
+        	if ((hashCode/100)%10 == 1) {
+        		rewardNum = -1;
+        	}
         }
         
         return rewardNum;        		
