@@ -1,3 +1,30 @@
+2012-06-02 02:39:17 Gill <gmail gillemorris>
+	@Nathan: 
+	    re: gridSize: is it actually an interior field? you'd need
+	    to know it if you ever want to say a traffic light is on a map;
+		eg, Main.java:41. you could have a getter for a private final 
+		int if you like, though i don't see what is to be gained there.
+	        the other possibilty is if we wanted the map size to be
+		either undefined or expandable (more probably the latter given
+	    how we've currently decided to represent it). in that case it
+	    could be useful having RoadMap give you a list of intersections?
+	    you'd also need a way of predicting the effect of addCars, since
+	    RoadMap assumes it gets coordinates {0<=x<40, 0<=y<40}.
+	        i'll probably add the list of intersections when graphics
+	    are done; any thoughts on addCars? also, any thoughts on having
+		not-necessarily-straight Roads?
+
+	    re: overrides: another thing they convey is that they override 
+	    something. happy to leave them, as apparently everyone does
+	    this. (aside: i can't help but be concerned this is only the
+	    world doing what its IDE tells it to. and not just override)
+	        query: "base method" being a method of Object/whatever else
+	    that might be extended?
+
+	* CarImpl.java: summarised our discussion, leaving code in the 
+	                "counterintuitive" form; it works and we understand
+	                it.
+
 2012-06-01 10:41 pm Nathan
 responding to changes below:
 	- gave up adding "??" comments every time I saw an @Override

@@ -18,7 +18,6 @@ public class CarImpl implements Car
     private Coords position;
     private Velocity velocity;
     private Velocity direction; // desired velocity (if no light)
-                                // -- why always in {1, -1}?
 
     public CarImpl(Coords position, Velocity startingVelocity)
     {
@@ -31,11 +30,8 @@ public class CarImpl implements Car
     @Override
     public void updateVelocity(TrafficLight l, RoadMap m)
     {
-        // incorrect: moving in the x-direction is to move horizontally
-            //clarification: when I made the class, i used standard (x, y) ordering in the coordinates. However because
-            //I printed out first looping through x then y, this actually resulted in x referring to the rows and y to
-            // the columns, resulting in an increase in x being a movement downwards. You are correct that this is
-            // counterintuitive. I cbf changing it though, feel free to if it bothers you :)
+        // this assumes that a car travelling in the x-direction may
+        // pass through a traffic light iff !light.horizontalGreen()
         boolean stop = 
             m.nextNonCarSquareIsTrafficLight(position, direction, l) &&
             (direction.getXSpeed() !=0 ) == l.horizontalGreen();
