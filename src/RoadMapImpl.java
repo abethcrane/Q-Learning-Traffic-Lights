@@ -88,30 +88,24 @@ public class RoadMapImpl implements RoadMap {
     }
 
     @Override
-    // Hash = 5 digit number (longer if more roads are added)
+    // Hash = 4 digit number (longer if more roads are added)
     /*
     1st - closest car position from intersection for road 1 (0-8, 9 if no cars) X
     2nd - closest car position from intersection for road 2 (0-8, 9 if no cars X
     3rd - light setting (ie 0-green, 1 red for one of the roads) X
     4th - light delay (0-3)
-    5th - action (0-1)
      */
     // Needs to take in traffic light so it can tell which one to work the things out for
-    public int hashCode(TrafficLight t, Action a) {        
+    public int stateCode(TrafficLight t) {
         int hash = 0;
-        
-        int action = 0;
-        if (a.action()) {
-            action = 1;
-        }
+
         int lightSetting = 0;
         if (t.horizontalGreen()) {
             lightSetting = 1;
         }
-        
-        hash += action;
-        hash += 10*t.getDelay();
-        hash += 100*lightSetting;
+
+        hash += t.getDelay();
+        hash += 10*lightSetting;
         
         // For each road off the traffic lights
         // Follow it back until we hit either 9 or a car
@@ -126,7 +120,7 @@ public class RoadMapImpl implements RoadMap {
                 break;
             }
         }
-        hash += 1000*i;
+        hash += 100*i;
         
         c = new Coords(t.getCoords());
         // Road two we'll go horizontally
@@ -136,7 +130,7 @@ public class RoadMapImpl implements RoadMap {
                 break;
             }
         }
-        hash += 10000*i;
+        hash += 1000*i;
     
         return hash;
     }
@@ -183,6 +177,9 @@ public class RoadMapImpl implements RoadMap {
             TrafficLight trafficLight
             ) {
         Coords current = new Coords(start.getX(), start.getY());
+        current.setX(current.getX() + direction.getXSpeed());
+        current.setY(current.getY() + direction.getYSpeed());
+
         while (current.getX() < gridSize && current.getX() >= 0 &&
                 current.getY() < gridSize && current.getY() >= 0 &&
                 (grid[current.getX()][current.getY()] != roadChar) &&
@@ -218,10 +215,7 @@ public class RoadMapImpl implements RoadMap {
         //explicit copy so array is not a reference to previous array
         for (int i = 0; i < gridSize; i++)
         {
-            for (int j = 0; j < gridSize; j++)
-            {
-                newGrid[i][j] = grid[i][j];
-            }
+            System.arraycopy(grid[i], 0, newGrid[i], 0, gridSize);
         }
         return newGrid;
     }

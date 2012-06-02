@@ -11,9 +11,7 @@ import interfaces.TrafficLight;
 import interfaces.RoadMap;
 import interfaces.Action;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class LearningModuleImpl implements LearningModule
 {
@@ -21,89 +19,90 @@ public class LearningModuleImpl implements LearningModule
     private static final int numCarSpaces = 9;
     private static final int numActions = 2;
     private static final int numRoads = 2;
-    private static final int numStates = 
-            (int)java.lang.Math.pow(numCarSpaces,numRoads) * numActions;
-    private static final int arraySize = 100000; // 5 digit hashCodes
     private static final int numTrafficLights = 2; // modify this
     // FIXME: {alpha, gamma, epsilon} are probably dependent - how?
     private static final float epsilon = (float)0.1;
     private static final float gamma = (float)0.9;
     private float alpha = (float)0.1;
-
-
-    private int counter;
-    // TODO: MERGING
-    private ActionImpl lastAction = new ActionImpl();
-    private ArrayList<Float> qValues = new ArrayList<Float>(arraySize);
+    private Map<Integer, Double> qValues = new HashMap<Integer, Double>();
     private ActionImpl[] actions = new ActionImpl[numActions];
-    private int[] prevReward = new int[numTrafficLights];
 
     LearningModuleImpl() {
-        counter = 0;
-        actions[0] = new ActionImpl(true);
-        actions[1] = new ActionImpl(false);
-        for (int i = 0; i < arraySize; i++) {
-            qValues.add(i,(float)0.0);
-        }
+        actions[0] = new ActionImpl(false);
+        actions[1] = new ActionImpl(true);
     }
 
     @Override
-    public void updateTrafficLights(
+    public List<Integer> updateTrafficLights(
             RoadMap r,
             List<TrafficLight> trafficLights
             ) {
-        /*
-        //So far, naive 'switch at every ten steps' counter
-        //disregards the actual state of the road
-        counter++;
-        if (counter == 10) {
-            for (TrafficLight light : trafficLights) {
-                light.switchLight();
-            }
-            counter = 0;
-        }
-         */
         // Less naive, using the optimal policy (i.e. best q-value)
-        int trafficLightNum = 0; 
+        List<Integer> switched = new ArrayList<Integer>();
         for (TrafficLight t : trafficLights) {
             Action a = getAction(r, t);
             if (a.action()) { // if we add more actions, change this
                 t.switchLight();
-            }   
-            // Going to need a queue of these
-            prevReward[trafficLightNum] = reward(r, t); // is this r(s) or r(s')?
-            trafficLightNum++;
+                switched.add(1);
+            } else {
+                switched.add(0);
+            }
         }
-
+        return switched;
     }
 
     @Override
-    public void learn(RoadMap s, RoadMap sPrime, List<TrafficLight> trafficLights) {
-        //uses a = lastAction
-        //currently doesn't learn a lot
-
-        updateAlpha();
-        //use old hashcode and current state
-        int trafficLightNum = 0;
-        for (TrafficLight t: trafficLights) {
-            float newQValue = ((1 - alpha) * qValues.get(s.hashCode(t, lastAction))) + (alpha * (prevReward[trafficLightNum] + (gamma * getMaxQValue(sPrime, t))));
-            qValues.set(s.hashCode(t, lastAction), newQValue);
-            trafficLightNum++; 
+    public List<Integer> updateTrafficLightsRandomly(RoadMap mapWithCars, List<TrafficLight> trafficLights)
+    {
+        List<Integer> switched = new ArrayList<Integer>();
+        for (TrafficLight light : trafficLights) {
+            //switch randomly
+            double r = Math.random();
+            if (r <= 0.5) {
+                light.switchLight();
+                switched.add(1);
+            } else {
+                switched.add(0);
+            }
         }
-
+        return switched;
     }
 
-    public float getMaxQValue (RoadMap sPrime, TrafficLight t) {
-        Action a;
-        float highestQ = 0;
-        for (int i = 0; i < numActions; i++) {
-            a = actions[i];
-            if (qValues.get(sPrime.hashCode(t,a)) > highestQ) {
-                highestQ = qValues.get(sPrime.hashCode(t,a));
-            }
-        }  
+    @Override
+    public void learn(List<Integer> pastStates, List<Integer> switches, List<Integer> rewards, List<Integer> newStates, List<TrafficLight> lights) {
+        //uses a = lastAction
+        //currently doesn't learn a lot
+        updateAlpha();
 
-        return highestQ;      
+        //use old hashcode and current state
+        for (int i = 0; i < lights.size(); i++) {
+            if (lights.get(i).getDelay() == 0 || lights.get(i).getDelay() == 3) {
+                //for each traffic light we get the state code, action, reward and old qvalue
+                int state = pastStates.get(i);
+                int nextState = newStates.get(i);
+                int action = switches.get(i);
+                int reward = rewards.get(i);
+                Double qVal = qValues.get(state + 10000*action);
+                if (qVal == null)
+                    qVal = 0.0;
+
+                //calculate new
+                double newQValue = (((1 - alpha) * qVal) + (alpha*reward + (gamma * getMaxQValue(nextState))));
+                qValues.put((state + 10000*action), newQValue);
+            }
+        }
+    }
+
+    public double getMaxQValue (int state) {
+        Double q1 = qValues.get(state + 10000);
+        if (q1 == null)
+            q1 = 0.0;
+
+        Double q2 = qValues.get(state);
+        if (q2 == null)
+            q2 = 0.0;
+
+        return Math.max(q1, q2);
     }
 
     //Reward -1.0 if a car is stopped at a red light on either road, zero otherwise.
@@ -127,22 +126,21 @@ public class LearningModuleImpl implements LearningModule
     	int rewardNum = 0;
 
     	// Doesn't matter what the action is, need it to get the hash    	
-    	ActionImpl a = new ActionImpl(false);
-        int hashCode = r.hashCode(t,a);
+        int hashCode = r.stateCode(t);
 
-        // If it's 3 digits both roads have a car at 0
-        if (hashCode / 1000 == 0) {
+        // If it's 2 digits both roads have a car at 0
+        if (hashCode / 100 == 0) {
         	rewardNum = -1;
-        // If it's 4 digits horizontal road has car at 0
+        // If it's 3 digits horizontal road has car at 0
         // Hence we check if the light is 0 (red for horizontal)
-        } else if (hashCode/10000 == 0) {
-        	if ((hashCode/100)%10 == 0) {
+        } else if (hashCode/1000 == 0) {
+        	if ((hashCode/10)%10 == 0) {
         		rewardNum = -1;
         	}
         // Else if the second digit is 0 there's a car at the vertical road
         // Hence we check if the light is 1 (red for vertical)
-        } else if ((hashCode/1000)%10 == 0) {
-        	if ((hashCode/100)%10 == 1) {
+        } else if ((hashCode/100)%10 == 0) {
+        	if ((hashCode/10)%10 == 1) {
         		rewardNum = -1;
         	}
         }
@@ -150,15 +148,19 @@ public class LearningModuleImpl implements LearningModule
         return rewardNum;        		
     }
 
-    public ActionImpl getAction (RoadMap r, TrafficLight t) {
-        ActionImpl a = new ActionImpl();
+    public Action getAction (RoadMap r, TrafficLight t) {
+        ActionImpl a;
 
-        float highestQ = 0;
+        double highestQ = 0;
         Action highestAction = new ActionImpl();
         for (int i = 0; i < numActions; i++) {
             a = actions[i];
-            if (qValues.get(r.hashCode(t,a)) > highestQ) {
-                highestQ = qValues.get(r.hashCode(t,a));
+            Double q = qValues.get(r.stateCode(t) + 10000*i);
+            if (q == null) {
+                q = 0.0;
+            }
+            if (q >= highestQ) {
+                highestQ = q;
                 highestAction = a;
             }
         }
@@ -172,7 +174,7 @@ public class LearningModuleImpl implements LearningModule
             highestAction = actions[rand.nextInt(numActions)];
         }
 
-        return (ActionImpl) highestAction;
+        return highestAction;
     }
 
     public void updateAlpha () {
