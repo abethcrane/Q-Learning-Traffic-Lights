@@ -28,4 +28,13 @@ public class ActionImpl implements Action
     {
         return toSwitch;
     }
+
+    public int actionInt()
+    {
+        if (toSwitch) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

@@ -1,3 +1,12 @@
+2012-06-02 12:00
+	        query: "base method" being a method of Object/whatever else
+	    that might be extended?
+	    -Base method being the method in the interface that is actually called.
+	    Our program should never be calling a method of an impl class, it should
+	    be calling a method of eg RoadMap, which then redirects to the method in
+	    whichever class that particular instance is
+
+
 2012-06-02 02:39:17 Gill <gmail gillemorris>
 	@Nathan: 
 	    re: gridSize: is it actually an interior field? you'd need

@@ -9,6 +9,9 @@ Nathan Wilson
 import interfaces.TrafficLight;
 import utils.Coords;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //Contains implementation of methods in interfaces.TrafficLight
 public class TrafficLightImpl implements TrafficLight {
     private final int maxDelay = 3;
@@ -24,7 +27,6 @@ public class TrafficLightImpl implements TrafficLight {
     @Override
     public void switchLight() {
     	if (getDelay() == 0) {
-    		horizontalGreen = !horizontalGreen;
     		delay = maxDelay;
     	}
     }
@@ -37,10 +39,18 @@ public class TrafficLightImpl implements TrafficLight {
         return delay;
     }
 
-    public void clock() {
+    public Boolean clock() {
         if (delay > 0) {
             delay--;
+            //used for amber - switches light as it comes off delay
+            if (delay == 0) {
+                horizontalGreen = !horizontalGreen;
+                return true;
+            } else {
+                return false;
+            }
         }
+        return false;
     }
 
     @Override

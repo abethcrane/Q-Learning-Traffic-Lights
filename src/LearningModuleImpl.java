@@ -24,7 +24,7 @@ public class LearningModuleImpl implements LearningModule
     private static final float epsilon = (float)0.1;
     private static final float gamma = (float)0.9;
     private float alpha = (float)0.1;
-    private Map<Integer, Double> qValues = new HashMap<Integer, Double>();
+    private Map<Integer, Float> qValues = new HashMap<Integer, Float>();
     private ActionImpl[] actions = new ActionImpl[numActions];
 
     LearningModuleImpl() {
@@ -33,22 +33,28 @@ public class LearningModuleImpl implements LearningModule
     }
 
     @Override
-    public List<Integer> updateTrafficLights(
+    public List<Boolean> updateTrafficLights(
             RoadMap r,
             List<TrafficLight> trafficLights
             ) {
+        List<Boolean> switches = new ArrayList<Boolean>();
         // Less naive, using the optimal policy (i.e. best q-value)
-        List<Integer> switched = new ArrayList<Integer>();
         for (TrafficLight t : trafficLights) {
-            Action a = getAction(r, t);
-            if (a.action()) { // if we add more actions, change this
-                t.switchLight();
-                switched.add(1);
+            if (t.getDelay() == 0) {
+                Action a = getAction(r, t);
+                if (a.action()) { // if we add more actions, change this
+                    t.switchLight();
+                } else {
+                    switches.add(t.clock());
+                }
+            } else if (t.getDelay() == 1){
+                //decrements counter and switches if necessary
+                switches.add(t.clock());
             } else {
-                switched.add(0);
+                t.clock();
             }
         }
-        return switched;
+        return switches;
     }
 
     @Override
@@ -69,44 +75,44 @@ public class LearningModuleImpl implements LearningModule
     }
 
     @Override
-    public void learn(List<Integer> pastStates, List<Integer> switches, List<Integer> rewards, List<Integer> newStates, List<TrafficLight> lights) {
+    public void learn(List<Integer> pastStates, List<Boolean> switches, List<Integer> rewards, List<Integer> newStates, List<TrafficLight> lights) {
         //uses a = lastAction
         //currently doesn't learn a lot
         updateAlpha();
 
         //use old hashcode and current state
         for (int i = 0; i < lights.size(); i++) {
-            if (lights.get(i).getDelay() == 0 || lights.get(i).getDelay() == 3) {
+            if (lights.get(i).getDelay() == 0) {
                 //for each traffic light we get the state code, action, reward and old qvalue
                 int state = pastStates.get(i);
                 int nextState = newStates.get(i);
-                int action = switches.get(i);
+                Action action = new ActionImpl(switches.get(i));
                 int reward = rewards.get(i);
-                Double qVal = qValues.get(state + 10000*action);
+                Float qVal = qValues.get(state + 1000*action.actionInt());
                 if (qVal == null)
-                    qVal = 0.0;
+                    qVal = (float)0.0;
 
                 //calculate new
-                double newQValue = (((1 - alpha) * qVal) + (alpha*reward + (gamma * getMaxQValue(nextState))));
-                qValues.put((state + 10000*action), newQValue);
+                Float newQValue = (((1 - alpha) * qVal) + (alpha*reward + (gamma * getMaxQValue(nextState))));
+                qValues.put((state + 1000*action.actionInt()), newQValue);
             }
         }
     }
 
-    public double getMaxQValue (int state) {
-        Double q1 = qValues.get(state + 10000);
+    public Float getMaxQValue (int state) {
+        Float q1 = qValues.get(state + 1000);
         if (q1 == null)
-            q1 = 0.0;
+            q1 = (float)0.0;
 
-        Double q2 = qValues.get(state);
+        Float q2 = qValues.get(state);
         if (q2 == null)
-            q2 = 0.0;
+            q2 = (float)0.0;
 
         return Math.max(q1, q2);
     }
 
     //Reward -1.0 if a car is stopped at a red light on either road, zero otherwise.
-    public int reward(RoadMap r, TrafficLight t) {
+    public int reward(int stateCode) {
         // work this out based on the cars array of the traffic light
 
         // if the hash of the roadmap traffic light (irrelevant of action)
@@ -125,22 +131,19 @@ public class LearningModuleImpl implements LearningModule
     	
     	int rewardNum = 0;
 
-    	// Doesn't matter what the action is, need it to get the hash    	
-        int hashCode = r.stateCode(t);
-
-        // If it's 2 digits both roads have a car at 0
-        if (hashCode / 100 == 0) {
-        	rewardNum = -1;
-        // If it's 3 digits horizontal road has car at 0
+        // If it's 1 digit both roads have a car at 0
+        if (stateCode / 10 == 0) {
+        	rewardNum = -2;
+        // If it's 2 digits horizontal road has car at 0
         // Hence we check if the light is 0 (red for horizontal)
-        } else if (hashCode/1000 == 0) {
-        	if ((hashCode/10)%10 == 0) {
+        } else if (stateCode/100 == 0) {
+        	if ((stateCode)%10 == 0) {
         		rewardNum = -1;
         	}
         // Else if the second digit is 0 there's a car at the vertical road
         // Hence we check if the light is 1 (red for vertical)
-        } else if ((hashCode/100)%10 == 0) {
-        	if ((hashCode/10)%10 == 1) {
+        } else if ((stateCode/10)%10 == 0) {
+        	if (stateCode%10 == 1) {
         		rewardNum = -1;
         	}
         }
@@ -155,9 +158,9 @@ public class LearningModuleImpl implements LearningModule
         Action highestAction = new ActionImpl();
         for (int i = 0; i < numActions; i++) {
             a = actions[i];
-            Double q = qValues.get(r.stateCode(t) + 10000*i);
+            Float q = qValues.get(r.stateCode(t) + 1000*i);
             if (q == null) {
-                q = 0.0;
+                q = (float)0;
             }
             if (q >= highestQ) {
                 highestQ = q;

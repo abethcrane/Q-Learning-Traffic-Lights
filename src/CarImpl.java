@@ -30,7 +30,10 @@ public class CarImpl implements Car
     @Override
     public void updateVelocity(TrafficLight l, RoadMap m)
     {
-        boolean stop = (m.nextNonCarSquareIsTrafficLight(position, direction, l) && ((direction.getXSpeed() !=0 ) == l.horizontalGreen()));        velocity.setXSpeed(stop ? 0 : direction.getXSpeed());
+        boolean stop = (m.nextNonCarSquareIsTrafficLight(position, direction, l) &&
+                (((direction.getXSpeed() !=0 ) == l.horizontalGreen()) ||
+                 ((direction.getYSpeed() !=0 ) == !l.horizontalGreen()) || l.getDelay() != 0));
+        velocity.setXSpeed(stop ? 0 : direction.getXSpeed());
         velocity.setYSpeed(stop ? 0 : direction.getYSpeed());
     }
 
