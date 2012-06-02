@@ -24,4 +24,6 @@ public interface Car
 
     //flag to remove the car if it has left the road
     boolean hasLeftMap(RoadMap map);
+
+    char getChar();
 }

@@ -1,4 +1,12 @@
 2012-06-02 12:00
+	    -added dual lanes - basically only needed to modify the 'car.update velocity'
+	    code to correctly sense it was approaching a traffic light, add some new road
+	    entrances and our forethought in programming handled the rest.
+	    -adding amber was very tricky because the fact that a switch was a delayed
+	    action meant that the program couldn't 'learn' the results for several moves
+	    down the track. required quite a bit of rearranging of the main logic
+
+2012-06-02 12:00
 	        query: "base method" being a method of Object/whatever else
 	    that might be extended?
 	    -Base method being the method in the interface that is actually called.

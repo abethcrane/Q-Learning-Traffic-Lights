@@ -28,7 +28,8 @@ import java.util.List;
 public class RoadMapImpl implements RoadMap {
     public final int gridSize = 40;
     private final Coords[] defaultEntrances =
-        {new Coords(0, gridSize/2), new Coords(gridSize/2, 0)};
+        {new Coords(gridSize-1, gridSize/2-2), new Coords(gridSize/2-2, 0),
+        new Coords(0, gridSize/2), new Coords(gridSize/2, gridSize-1)};
     private final char carChar = 'C';
     private final int roadChar = ' ';
     private char[][] grid;
@@ -69,7 +70,7 @@ public class RoadMapImpl implements RoadMap {
         char[][] newGrid = copyGrid(grid);
         for (Car car : cars) {
             int x=car.getCoords().getX(), y=car.getCoords().getY();
-            newGrid[x][y] = carChar;
+            newGrid[x][y] = car.getChar();
         }
         for(TrafficLight light : trafficLights) {
             int x=light.getCoords().getX(), y=light.getCoords().getY();
@@ -113,26 +114,46 @@ public class RoadMapImpl implements RoadMap {
         // Follow it back until we hit either 9 or a car
         // Mark that place         
         
-        Coords c = new Coords(t.getCoords());
+        Coords c = new Coords(t.getCoords()).right().up();
         int i;
-        // Road one we'll go vertically
+        // Road one we'll go vertically up
         for (i = 0; i < 9; i++) {
             c.setX(c.getX()-1);
             if (carAt(c)) {
                 break;
             }
         }
-        hash += 10*i;
-        
-        c = new Coords(t.getCoords());
-        // Road two we'll go horizontally
+        int v1 = i;
+        c = new Coords(t.getCoords()).left().down();
+        // Road one we'll go vertically down
+        for (i = 0; i < 9; i++) {
+            c.setX(c.getX()+1);
+            if (carAt(c)) {
+                break;
+            }
+        }
+        int v2 = i;
+        hash += 10*(Math.min(v1, v2));
+
+        c = new Coords(t.getCoords()).left().up();
+        // Road two we'll go horizontally left
         for (i = 0; i < 9; i++) {
             c.setY(c.getY()-1);
             if (carAt(c)) {
                 break;
             }
         }
-        hash += 100*i;
+        int h1 = i;
+        c = new Coords(t.getCoords()).right().down();
+        // Road two we'll go horizontally right
+        for (i = 0; i < 9; i++) {
+            c.setY(c.getY()+1);
+            if (carAt(c)) {
+                break;
+            }
+        }
+        int h2 = i;
+        hash += 100*(Math.min(h1, h2));
     
         return hash;
     }
@@ -147,13 +168,13 @@ public class RoadMapImpl implements RoadMap {
         if (roadEntrance.getX() == 0) {
             return new Velocity(1, 0);
         }
-        if (roadEntrance.getX() == gridSize) {
+        if (roadEntrance.getX() == gridSize-1) {
             return new Velocity(-1, 0);
         }
         if (roadEntrance.getY() == 0) {
             return new Velocity(0, 1);
         }
-        if (roadEntrance.getY() == gridSize) {
+        if (roadEntrance.getY() == gridSize-1) {
             return new Velocity(0, -1);
         }
         return null;
@@ -181,17 +202,32 @@ public class RoadMapImpl implements RoadMap {
         Coords current = new Coords(start.getX(), start.getY());
         current.setX(current.getX() + direction.getXSpeed());
         current.setY(current.getY() + direction.getYSpeed());
+        //need different traffic light coords depending on direction
+        Coords trafficLightCoords = new Coords(0,0);
+        if (direction.getXSpeed() == 0) {
+            if (direction.getYSpeed() == 1) {
+                trafficLightCoords = trafficLight.getCoords().left().up();
+            } else if (direction.getYSpeed() == -1) {
+                trafficLightCoords = trafficLight.getCoords().right().down();
+            }
+        } else if (direction.getYSpeed() == 0) {
+            if (direction.getXSpeed() == 1) {
+                trafficLightCoords = trafficLight.getCoords().right().up();
+            } else if (direction.getXSpeed() == -1) {
+                trafficLightCoords = trafficLight.getCoords().left().down();
+            }
+        }
 
         while (current.getX() < gridSize && current.getX() >= 0 &&
                 current.getY() < gridSize && current.getY() >= 0 &&
                 (grid[current.getX()][current.getY()] != roadChar) &&
-                !trafficLight.getCoords().equals(current))
+                !trafficLightCoords.equals(current))
         {
             current.setX(current.getX() + direction.getXSpeed());
             current.setY(current.getY() + direction.getYSpeed());
         }
 
-        return trafficLight.getCoords().equals(current);
+        return trafficLightCoords.equals(current);
 
     }
 

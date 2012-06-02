@@ -37,8 +37,8 @@ public class Main
         List<TrafficLight> trafficLights = 
                 new ArrayList<TrafficLight>();
         trafficLights.add(
-                new TrafficLightImpl(new Coords(20,20),false));
-        double trafficDensityThreshold = 0.4;
+                new TrafficLightImpl(new Coords(19, 19),false));
+        double trafficDensityThreshold = 0.3;
         LearningModule learningModule = new LearningModuleImpl();
 
         //Basic logic for each time step

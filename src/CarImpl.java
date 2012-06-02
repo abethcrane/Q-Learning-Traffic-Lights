@@ -33,8 +33,9 @@ public class CarImpl implements Car
         // this assumes that a car travelling in the x-direction may
         // pass through a traffic light iff !light.horizontalGreen()
         boolean stop =
-                m.nextNonCarSquareIsTrafficLight(position, direction, l) &&
-                        (direction.getXSpeed() !=0 ) == l.horizontalGreen();
+                (m.nextNonCarSquareIsTrafficLight(position, direction, l))&&
+                        ((direction.getXSpeed() !=0) == l.horizontalGreen() ||
+                          l.getDelay() != 0);
         velocity.setXSpeed(stop ? 0 : direction.getXSpeed());
         velocity.setYSpeed(stop ? 0 : direction.getYSpeed());
     }
@@ -58,5 +59,19 @@ public class CarImpl implements Car
         return
             position.getX() < 0 || position.getX() >= 40 ||
             position.getY() < 0 || position.getY() >= 40;
+    }
+
+    @Override
+    public char getChar()
+    {
+        if (direction.getXSpeed() == -1) {
+            return '^';
+        }  else if (direction.getXSpeed() == 1) {
+            return 'v';
+        } else if (direction.getYSpeed() == -1) {
+            return '<';
+        } else {
+            return '>';
+        }
     }
 }
