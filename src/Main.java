@@ -27,11 +27,13 @@ public class Main
         //           is to make the poor thing learn everything again
         //           each time it runs before worrying about it. -- Gill
 
+    	int runTime = 1000100;
+        int quietTime = 1000000;
+        boolean graphicalOutput = true;
+        boolean consoleOutput = false;
+
         //Initialise map, list of cars currently on map, and list of 
         //trafficlights
-    	
-    	int runTime = 1001000;
-    	
         RoadMap map = new RoadMapImpl();
         List<Car> cars = new ArrayList<Car>();
         List<TrafficLight> trafficLights = 
@@ -40,6 +42,7 @@ public class Main
                 new TrafficLightImpl(new Coords(19, 19),false));
         double trafficDensityThreshold = 0.3;
         LearningModule learningModule = new LearningModuleImpl();
+        Viewer v = new Viewer();
 
         //Basic logic for each time step
         // - change traffic lights if required - call a function from 
@@ -47,7 +50,12 @@ public class Main
         // - move cars in their current direction by velocity (modify 
         //   velocity if necessary - using CarAI)
         // - spawn cars at extremities
-        // Now that we have the new state, update the qvalue for the previous s,a pair
+        // - Now that we have the new state, update the qvalue for the p
+        //   revious s,a pair
+        
+        // TODO: no longer matters how small i make my font,
+        // this loop ain't gonna fit on my screen
+        // or even robert's
         for (int timeToRun = 0; timeToRun < runTime; ++timeToRun) {
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
@@ -56,10 +64,6 @@ public class Main
             List<Integer> nextStates = new ArrayList<Integer>();
             List<Integer> rewards = new ArrayList<Integer>();
 
-            //Two different modes - while learning, and after learning
-            //While learning we determine switching randomly and make the algorithm 'learn' qvalues
-            //After learning we determine switching using above qvalues
-
             // Update the traffic lights - switch or stay
             if (timeToRun <= 100000) {
                 //Get integer representing state BEFORE cars are moved and lights are switched
@@ -67,20 +71,21 @@ public class Main
                     states.add(currentState.stateCode(light));
                 }
             }
+            //returns a list of true/false that the lights were 
+            //switched for learning purposes
             switchedLights = learningModule.updateTrafficLights(
-                        currentState, trafficLights);
-
+                    currentState, trafficLights
+            );
             RoadMap nextState = currentState.copyMap();
 
             //Move cars currently on map
             List<Car> carsToRemove = new ArrayList<Car>();
-            for (Car car : cars)
-            {
-                // FIXME: assumes map contains a single light (will fix when we add lights)
+            for (Car car : cars) {
+                // FIXME: assumes map contains a single light 
+                // (will fix when we add lights)
                 car.updateVelocity(trafficLights.get(0), currentState);
                 car.updatePosition();
-                if (car.hasLeftMap(map))
-                {
+                if (car.hasLeftMap(map)) {
                      carsToRemove.add(car);
                 }
             }
@@ -93,11 +98,15 @@ public class Main
                     Math.random() <= trafficDensityThreshold &&
                     !currentState.carAt(roadEntrance)
                 ) {
-                    cars.add(new CarImpl
-                    (
-                        new Coords(roadEntrance),
-                        map.getStartingVelocity(roadEntrance)
-                    ));
+                    // TODO: if currentState.carAt(roadEntrance) we
+                    // should probably model that there's a queue
+                    // outside the map and/or fail our traffic light
+                    // learner
+                    Car c = new CarImpl(
+                            new Coords(roadEntrance),
+                            map.getStartingVelocity(roadEntrance)
+                    );
+                    cars.add(c);
                 }
             }
             nextState.addCars(cars);
@@ -115,6 +124,18 @@ public class Main
                 learningModule.learn(states, switchedLights, rewards, nextStates, trafficLights);
             }
 
+            if (timeToRun >= quietTime) {
+                if (graphicalOutput) {
+                    v.view(map, cars, trafficLights);
+                }
+                if (consoleOutput) {
+                    map.print(cars, trafficLights);
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (Exception e) {}
+            }
+            
             //Learns 1000000 time steps and then lets us watch it
             if (timeToRun > 1000000) {
 	            map.print(cars, trafficLights);

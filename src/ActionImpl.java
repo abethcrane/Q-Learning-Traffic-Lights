@@ -31,10 +31,6 @@ public class ActionImpl implements Action
 
     public int actionInt()
     {
-        if (toSwitch) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return toSwitch ? 1 : 0;
     }
 }

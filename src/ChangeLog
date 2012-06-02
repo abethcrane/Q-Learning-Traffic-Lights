@@ -1,12 +1,23 @@
-2012-06-02 12:00
+2012-06-02 3:00 pm Nathan
 	    -added dual lanes - basically only needed to modify the 'car.update velocity'
 	    code to correctly sense it was approaching a traffic light, add some new road
 	    entrances and our forethought in programming handled the rest.
 	    -adding amber was very tricky because the fact that a switch was a delayed
 	    action meant that the program couldn't 'learn' the results for several moves
 	    down the track. required quite a bit of rearranging of the main logic
+	Query: whoever made the substantial changes to Main and 
+	interfaces - can you explain what you've done? I... hope
+	everything still works. Though a brief inspection of the output
+	indicates its learning quite well.
+	    Also, can we take stateCode out of RoadMap? The value thus
+	computed is basically useless to everything except
+	LearnerModuleImpl.
+	
+        -I made the substantial changes, it was necessary because of the way I had to 
+        do amber lights, see brief description above
+        - by all means move it into learnermoduleimpl
 
-2012-06-02 12:00
+2012-06-02 12:00 Nathan
 	        query: "base method" being a method of Object/whatever else
 	    that might be extended?
 	    -Base method being the method in the interface that is actually called.
@@ -14,29 +25,53 @@
 	    be calling a method of eg RoadMap, which then redirects to the method in
 	    whichever class that particular instance is
 
+	* Main.java: started cleaning up some duplicated code. However
+	             the only reason I actually submitted this modified
+	             version is I accidently deleted the old one; so by
+	             all means overwrite it in case of a conflict.
+
+2012-06-02 13:24:05 Gill <gmail gillemorris>
+	* Viewer.java: pretty colors
+
+2012-06-02 08:30:32 Gill <gmail gillemorris>
+	Query: whoever made the substantial changes to Main and 
+	interfaces - can you explain what you've done? I... hope
+	everything still works. Though a brief inspection of the output
+	indicates its learning quite well.
+	    Also, can we take stateCode out of RoadMap? The value thus
+	computed is basically useless to everything except
+	LearnerModuleImpl.
+
+	* Viewer.java: exists. provides graphical output functionality.
+	* Main.java: uses this functionality.
+	* interfaces/RoadMap.java: features `boolean roadAt(Coords)'
+	* RoadMapImpl.java: implements this.
 
 2012-06-02 02:39:17 Gill <gmail gillemorris>
 	@Nathan: 
 	    re: gridSize: is it actually an interior field? you'd need
-	    to know it if you ever want to say a traffic light is on a map;
-		eg, Main.java:41. you could have a getter for a private final 
-		int if you like, though i don't see what is to be gained there.
+	    to know it if you ever want to say a traffic light is on a 
+	    map; eg, Main.java:41. you could have a getter for a private
+	    final int if you like, though i don't see what is to be
+	    gained there.
 	        the other possibilty is if we wanted the map size to be
-		either undefined or expandable (more probably the latter given
-	    how we've currently decided to represent it). in that case it
-	    could be useful having RoadMap give you a list of intersections?
-	    you'd also need a way of predicting the effect of addCars, since
-	    RoadMap assumes it gets coordinates {0<=x<40, 0<=y<40}.
-	        i'll probably add the list of intersections when graphics
-	    are done; any thoughts on addCars? also, any thoughts on having
-		not-necessarily-straight Roads?
+	    either undefined or expandable (more probably the latter
+	    given how we've currently decided to represent it). in that
+	    case it could be useful having RoadMap give you a list of 
+	    intersections? you'd also need a way of predicting the
+	    effect of addCars, since RoadMap assumes it gets coordinates
+	    {0<=x<40, 0<=y<40}.
+	        i'll probably add the list of intersections when
+	    graphics are done; any thoughts on addCars? also, any
+	    thoughts on having not-necessarily-straight Roads?
 
-	    re: overrides: another thing they convey is that they override 
-	    something. happy to leave them, as apparently everyone does
-	    this. (aside: i can't help but be concerned this is only the
-	    world doing what its IDE tells it to. and not just override)
-	        query: "base method" being a method of Object/whatever else
-	    that might be extended?
+	    re: overrides: another thing they convey is that they
+	    override something. happy to leave them, as apparently
+	    everyone does this. (aside: i can't help but be concerned
+	    this is only the world doing what its IDE tells it to. and
+	    not just with override)
+	        query: "base method" being a method of Object/whatever
+	    else that might be extended?
 
 	* CarImpl.java: summarised our discussion, leaving code in the 
 	                "counterintuitive" form; it works and we understand

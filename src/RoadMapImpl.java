@@ -6,12 +6,6 @@ Gill Morris
 Nathan Wilson
  */
 
-// The intention is to change every occurrence of
-// (List<Cars> cars, List<TrafficLights> trafficLights
-// to
-// State s
-// Ceebs now.
-
 import interfaces.Car;
 import interfaces.RoadMap;
 import interfaces.Action;
@@ -22,7 +16,6 @@ import utils.Velocity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 
 //Roadmap Implementation class - implements methods from interfaces.RoadMap
 public class RoadMapImpl implements RoadMap {
@@ -44,7 +37,7 @@ public class RoadMapImpl implements RoadMap {
                 for (Coords k : roadEntrances) {
                     if ((i > 0 && i == k.getX()) || 
                             (j > 0 && j == k.getY())) {
-                        grid[i][j] = ' ';
+                        grid[i][j] = roadChar;
                     }
                 }
             }

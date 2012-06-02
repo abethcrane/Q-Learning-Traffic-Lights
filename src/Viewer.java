@@ -41,24 +41,22 @@ public class Viewer extends JFrame {
         this.m = m;
         this.c = c;
         this.l = l;
-        this.getContentPane().setBackground(new Color(0x7e7e7e));
-        init++;
+        if (init == 0) init = 1;
         this.repaint(0);
     }
 
-    public void paint(Graphics g) {
-        if (init == 0) {
-            g.drawString("Still learning...", u*n/3, u*n/3);
-            return;
-        } else if (init == 1) {
-            g.drawString("Learned! Enjoy the show!", u*n/3, u*n/3);
-            g.setColor(backgroundColor);
-            g.fillRect(0, 0, u*n, u*n);
-            init = 2;
-            return;
-        }
+    private void stillLearning(Graphics g) {
+        g.drawString("Still learning...", u*n/3, u*n/3);
+    }
+    
+    private void firstPicture(Graphics g) {
+        g.drawString("Learned! Enjoy the show!", u*n/3, u*n/3);
+        g.setColor(backgroundColor);
+        g.fillRect(0, 0, u*n, u*n);
+    }
 
-        String apology = "should be less  flickery soon";
+    private void displayMap(Graphics g) {
+        String apology = "should be less flickery soon";
         // ^ to this end repaint(int, int, int, int) could be of
         // much help. i'm assuming java just takes fucking forever to
         // draw ~2000 pixels.
@@ -79,7 +77,9 @@ public class Viewer extends JFrame {
         for (Car i : c) {
             int x = i.getCoords().getX(), y = i.getCoords().getY();
             g.setColor(
-                x == y ? new Color(darkish, darkish, darkish) :
+                x == y ? 
+                    l.get(0).horizontalGreen() ? new Color(0,darkish,0)
+                    : new Color(0, 0, darkish) :
                 x == 20 ? new Color(0, y < 20 ? 255*y/20 : darkish, 0) :
                 y == 20 ? new Color(0, 0, x < 20 ? 255*x/20 : darkish) :
                     Color.magenta
@@ -93,6 +93,18 @@ public class Viewer extends JFrame {
             g.fillRect(u*x+w, u*y, u-2*w, w);
             g.setColor(!i.horizontalGreen() ? Color.green : Color.red);
             g.fillRect(u*x, u*y+w, w, u-2*w);
+        }
+
+    }
+
+    public void paint(Graphics g) {
+        if (init == 0) {
+            stillLearning(g);
+        } else if (init == 1) {
+            firstPicture(g);
+            init = 2;
+        } else {
+            displayMap(g);
         }
     }
 }

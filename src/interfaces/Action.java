@@ -10,7 +10,7 @@ Nathan Wilson
 
 public interface Action
 {
-    boolean action();
+    public boolean action();
 
-    int actionInt();
+    public int actionInt();
 }
