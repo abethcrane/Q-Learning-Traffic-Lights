@@ -1,3 +1,14 @@
+2012-06-02 14:40:39 Gill <gmail gillemorris>
+	Pushed because my clock broke bucket.
+
+	* Main.java: started cleaning up some duplicated code. However
+	             the only reason I actually submitted this modified
+	             version is I accidently deleted the old one; so by
+	             all means overwrite it in case of a conflict.
+
+2012-06-02 13:24:05 Gill <gmail gillemorris>
+	* Viewer.java: pretty colors
+
 2012-06-02 08:30:32 Gill <gmail gillemorris>
 	Query: whoever made the substantial changes to Main and 
 	interfaces - can you explain what you've done? I... hope

@@ -27,7 +27,7 @@ public class Main
         //           is to make the poor thing learn everything again
         //           each time it runs before worrying about it. -- Gill
 
-    	int runTime = 1001000;
+    	int runTime = 1000100;
         int quietTime = 1000000;
         boolean graphicalOutput = true;
         boolean consoleOutput = false;
@@ -72,38 +72,27 @@ public class Main
             List<Integer> nextStates = new ArrayList<Integer>();
             List<Integer> rewards = new ArrayList<Integer>();
 
-            //Two different modes - while learning, and after learning
-            //While learning we determine switching randomly and make 
-            //the algorithm 'learn' qvalues
-            //After learning we determine switching using above qvalues
-
             // Update the traffic lights - switch or stay
-            if (timeToRun <= quietTime) {
-                //Get integer representing state BEFORE cars are moved
-                //and lights are switched
-                for (TrafficLight light: trafficLights) {
-                    states.add(currentState.stateCode(light));
-                }
-                //returns a list of true/false that the lights were 
-                //switched for learning purposes
-                switchedLights = learningModule.updateTrafficLights(
-                    currentState, trafficLights);
-            } else {
-                switchedLights = learningModule.updateTrafficLights(
-                        currentState, trafficLights);
+            //Get integer representing state BEFORE cars are moved
+            //and lights are switched
+            for (TrafficLight light: trafficLights) {
+                states.add(currentState.stateCode(light));
             }
+            //returns a list of true/false that the lights were 
+            //switched for learning purposes
+            switchedLights = learningModule.updateTrafficLights(
+                    currentState, trafficLights
+            );
             RoadMap nextState = currentState.copyMap();
 
             //Move cars currently on map
             List<Car> carsToRemove = new ArrayList<Car>();
-            for (Car car : cars)
-            {
+            for (Car car : cars) {
                 // FIXME: assumes map contains a single light 
                 // (will fix when we add lights)
                 car.updateVelocity(trafficLights.get(0), currentState);
                 car.updatePosition();
-                if (car.hasLeftMap(map))
-                {
+                if (car.hasLeftMap(map)) {
                      carsToRemove.add(car);
                 }
             }
@@ -128,21 +117,19 @@ public class Main
                 }
             }
             nextState.addCars(cars);
-            
-            //Learns for first 100,000 only
-            if (timeToRun < quietTime) {
-                //calculate reward and state code for each traffic light
-                for (TrafficLight light : trafficLights) {
-                    rewards.add(learningModule.reward(nextState,light));
-                    nextStates.add(nextState.stateCode(light));
-                }
-                //To learn we need to pass through - previous states, 
-                //actions taken, rewards
-                learningModule.learn(
-                        states, switchedLights, rewards, 
-                        nextStates, trafficLights
-                );
-            } else {
+
+            for (TrafficLight light : trafficLights) {
+                rewards.add(learningModule.reward(nextState,light));
+                nextStates.add(nextState.stateCode(light));
+            }
+            //calculate reward and state code for each traffic light
+            //To learn we need to pass through - previous states, 
+            //actions taken, rewards
+            learningModule.learn(
+                    states, switchedLights, rewards, 
+                    nextStates, trafficLights
+            );
+            if (timeToRun >= quietTime) {
                 if (graphicalOutput) {
                     v.view(map, cars, trafficLights);
                 }
@@ -150,11 +137,8 @@ public class Main
                     map.print(cars, trafficLights);
                 }
                 try {
-                    Thread.sleep(1000);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                    Thread.sleep(100);
+                } catch (Exception e) {}
             }
             for (TrafficLight light : trafficLights) {
                 light.clock();
