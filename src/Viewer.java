@@ -30,6 +30,7 @@ public class Viewer extends JFrame {
     private static final Color backgroundColor = new Color(0x7e7e7e);
     private static final Color roadColor = new Color(0x212323);
     private static final Color intersectBackground = roadColor;
+    private static final Color error = Color.magenta;
     private static final int darkish = 0x3f;
 
     public Viewer() {
@@ -42,7 +43,9 @@ public class Viewer extends JFrame {
         this.m = m;
         this.c = c;
         this.l = l;
-        if (init == 0) init = 1;
+        if (init == 0) {
+            init = 1;
+        }
         this.repaint(0);
     }
 
@@ -80,7 +83,7 @@ public class Viewer extends JFrame {
             g.setColor(
                 dy == 0 ? Color.green :
                 dx == 0 ? Color.blue :
-                    Color.magenta
+                    error
             );
             int p = dx == 0 ? w : 1, q = dy == 0 ? w : 1;
             g.fillRect(u*x+p, u*y+q, u-2*p, u-2*q);
@@ -89,15 +92,15 @@ public class Viewer extends JFrame {
         for (TrafficLight i : l) {
             int x = i.getCoords().getX(), y = i.getCoords().getY();
             g.setColor(
-                i.horizontalGreen() && i.getDelay() > 0 ? Color.orange :
-                i.horizontalGreen() ? Color.green :
+                !i.horizontalGreen() && i.getDelay() > 0 ? Color.orange:
+                !i.horizontalGreen() ? Color.green :
                     Color.red
             );
             g.fillRect(u*x+w, u*y, u-2*w, w);
             g.fillRect(u*x+w, u*(y+1)-w, u-2*w, w);
             g.setColor(
-                !i.horizontalGreen() && i.getDelay() > 0 ? Color.orange:
-                !i.horizontalGreen() ? Color.green :
+                i.horizontalGreen() && i.getDelay() > 0 ? Color.orange:
+                i.horizontalGreen() ? Color.green :
                     Color.red
             );
             g.fillRect(u*x, u*y+w, w, u-2*w);
@@ -112,8 +115,11 @@ public class Viewer extends JFrame {
         } else if (init == 1) {
             firstPicture(g);
             init = 2;
-        } else {
+        } else if (init == 2) {
             displayMap(g);
+        } else {
+            g.setColor(error);
+            g.fillRect(0, 0, u*n, u*n);
         }
     }
 }

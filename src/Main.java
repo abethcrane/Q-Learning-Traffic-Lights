@@ -56,8 +56,7 @@ public class Main
         // TODO: no longer matters how small i make my font,
         // this loop ain't gonna fit on my screen
         // or even robert's
-        int timeToRun = 0;
-        while (true) {
+        for (int timeToRun = 0; ; timeToRun++) {
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
             List<Boolean> switchedLights;
@@ -65,7 +64,7 @@ public class Main
             List<Integer> nextStates = new ArrayList<Integer>();
             List<Integer> rewards = new ArrayList<Integer>();
 
-            // Update the traffic lights - switch or stay
+            //Update the traffic lights - switch or stay
             //Get integer representing state BEFORE cars are moved
             //and lights are switched
             for (TrafficLight light: trafficLights) {
@@ -133,10 +132,9 @@ public class Main
                     map.print(cars, trafficLights);
                 }
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(500);
                 } catch (Exception e) {}
             }
-            timeToRun++;
         }
     }
 }

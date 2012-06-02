@@ -1,3 +1,17 @@
+2012-06-03 04:36:-- Gill <gmail gillemorris>
+	* Viewer.java: added some rudimentary error checking
+	* RoadMapImp.java: catAt and roadAt no longer switch the axes.
+	    also, decided we needed to follow convention in our definitions
+	    of x-direction and y-direction or things would quickly become
+	    unmaintainable.
+	* interfaces/Car.java: removed duplicate functionality of getChar
+	* interfaces/TrafficLight.java: clarified some specs; comments now
+	    reflect its actual functionality
+	* CarImpl.java: removed getChar; expanded slightly the logic of
+		`stop' in `updateVelocity'
+	* LearningModuleImpl.java: updated directional convention, and then
+	    speculated on why there are so many 0 q-values.
+
 2012-06-02 19:11:12 Gill <gmail gillemorris>
 	* Viewer.java: now displays amber lights, intersection is
 	    road-colored, cars are now rectangles not squares. -- i still

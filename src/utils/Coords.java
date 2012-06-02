@@ -50,22 +50,22 @@ public class Coords extends Object {
 
     public Coords left()
     {
-        return new Coords(x, y - 1);
+        return new Coords(x - 1, y);
     }
 
     public Coords right()
     {
-        return new Coords(x, y + 1);
+        return new Coords(x + 1, y);
     }
 
     public Coords up()
     {
-        return new Coords(x - 1, y);
+        return new Coords(x, y - 1);
     }
 
     public Coords down()
     {
-        return new Coords(x + 1, y);
+        return new Coords(x, y + 1);
     }
 
     @Override

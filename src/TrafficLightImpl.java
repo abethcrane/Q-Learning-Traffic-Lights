@@ -48,6 +48,10 @@ public class TrafficLightImpl implements TrafficLight {
         }
     }
 
+    public int radius() {
+        return 1;
+    }
+
     @Override
     public boolean horizontalGreen() {
         return horizontalGreen;

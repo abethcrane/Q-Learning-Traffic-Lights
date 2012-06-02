@@ -40,6 +40,13 @@ public class LearningModuleImpl implements LearningModule
         List<Boolean> switches = new ArrayList<Boolean>();
         // Less naive, using the optimal policy (i.e. best q-value)
         for (TrafficLight t : trafficLights) {
+            boolean a = 
+                (t.getDelay() == 0 && getAction(r, t).action());
+            switches.add(a);
+            if (a) {
+                t.switchLight();
+            }
+            /*
             if (t.getDelay() == 0) {
                 Action a = getAction(r, t);
                 switches.add(a.action());
@@ -48,8 +55,10 @@ public class LearningModuleImpl implements LearningModule
                 }
             } else {
                 //decrements counter and switches if necessary
-                switches.add(t.getDelay() == 1);
+                //switches.add(t.getDelay() == 1);
+                switches.add(false);
             }
+            */
             t.clock();
         }
         return switches;
@@ -180,7 +189,7 @@ public class LearningModuleImpl implements LearningModule
     public Action getAction (RoadMap r, TrafficLight t) {
         ActionImpl a;
 
-        double highestQ = 0;
+        double highestQ = -9999;
         Action highestAction = new ActionImpl();
         for (int i = 0; i < numActions; i++) {
             a = actions[i];
@@ -188,7 +197,12 @@ public class LearningModuleImpl implements LearningModule
             if (q == null) {
                 q = (float)0;
             }
-            if (q >= highestQ) {
+            // FIXME: as the identifier suggests, we actually need
+            // the highest q.
+            // however, this temporarily gets us around the problem of
+            // q(true) = 0 (always) and q(false) being generally in 
+            // [-30, -5]
+            if (q < highestQ) {
                 highestQ = q;
                 highestAction = a;
             }
