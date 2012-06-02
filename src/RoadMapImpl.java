@@ -6,6 +6,12 @@ Gill Morris
 Nathan Wilson
  */
 
+// The intention is to change every occurrence of
+// (List<Cars> cars, List<TrafficLights> trafficLights
+// to
+// State s
+// Ceebs now.
+
 import interfaces.Car;
 import interfaces.RoadMap;
 import interfaces.Action;
@@ -16,6 +22,7 @@ import utils.Velocity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 //Roadmap Implementation class - implements methods from interfaces.RoadMap
 public class RoadMapImpl implements RoadMap {
@@ -36,7 +43,7 @@ public class RoadMapImpl implements RoadMap {
                 for (Coords k : roadEntrances) {
                     if ((i > 0 && i == k.getX()) || 
                             (j > 0 && j == k.getY())) {
-                        grid[i][j] = roadChar;
+                        grid[i][j] = ' ';
                     }
                 }
             }
@@ -66,7 +73,11 @@ public class RoadMapImpl implements RoadMap {
         }
         for(TrafficLight light : trafficLights) {
             int x=light.getCoords().getX(), y=light.getCoords().getY();
-            newGrid[x][y] = light.horizontalGreen() ? '>' : 'v';
+            if (light.getDelay() != 0) {
+                newGrid[x][y] = 'o';
+            } else {
+                newGrid[x][y] = light.horizontalGreen() ? '>' : 'v';
+            }
         }
 
         //print new grid to screen
@@ -82,12 +93,9 @@ public class RoadMapImpl implements RoadMap {
     @Override
     // Hash = 4 digit number (longer if more roads are added)
     /*
-        1st - closest car position from intersection for road 1 
-              (0-8, 9 if no cars) X
-        2nd - closest car position from intersection for road 2 
-              (0-8, 9 if no cars X
-        3rd - light setting (ie 0-green, 1 red for one of the roads) X
-        4th - light delay (0-3)
+    1st - closest car position from intersection for road 1 (0-8, 9 if no cars) X
+    2nd - closest car position from intersection for road 2 (0-8, 9 if no cars X
+    3rd - light setting (ie 0-green, 1 red for one of the roads) X
      */
     // Needs to take in traffic light so it can tell which one to work
     // the things out for
@@ -99,8 +107,7 @@ public class RoadMapImpl implements RoadMap {
             lightSetting = 1;
         }
 
-        hash += t.getDelay();
-        hash += 10*lightSetting;
+        hash += lightSetting;
         
         // For each road off the traffic lights
         // Follow it back until we hit either 9 or a car
@@ -115,7 +122,7 @@ public class RoadMapImpl implements RoadMap {
                 break;
             }
         }
-        hash += 100*i;
+        hash += 10*i;
         
         c = new Coords(t.getCoords());
         // Road two we'll go horizontally
@@ -125,7 +132,7 @@ public class RoadMapImpl implements RoadMap {
                 break;
             }
         }
-        hash += 1000*i;
+        hash += 100*i;
     
         return hash;
     }
