@@ -19,12 +19,11 @@ public interface TrafficLight
     //Get coordinates of traffic light
     Coords getCoords();
 
-    //Time until calling switchLight() will have an effect
+    //Time until 
     int getDelay();
 
-    //Inform the light that a unit of time has passed. - returns 1/0 whether lights switched or not.
-    //It is here because of the amber phase
-    Boolean clock();
+    //Inform the light that a unit of time has passed.
+    void clock();
 
     boolean horizontalGreen();
 }

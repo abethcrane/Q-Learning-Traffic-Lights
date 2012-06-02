@@ -27,7 +27,7 @@ public class Main
         //           is to make the poor thing learn everything again
         //           each time it runs before worrying about it. -- Gill
 
-    	int runTime = 1000100;
+    	int runTime = 1001000;
         int quietTime = 1000000;
         boolean graphicalOutput = true;
         boolean consoleOutput = false;
@@ -65,11 +65,10 @@ public class Main
             List<Integer> rewards = new ArrayList<Integer>();
 
             // Update the traffic lights - switch or stay
-            if (timeToRun <= 100000) {
-                //Get integer representing state BEFORE cars are moved and lights are switched
-                for (TrafficLight light: trafficLights) {
-                    states.add(currentState.stateCode(light));
-                }
+            //Get integer representing state BEFORE cars are moved
+            //and lights are switched
+            for (TrafficLight light: trafficLights) {
+                states.add(currentState.stateCode(light));
             }
             //returns a list of true/false that the lights were 
             //switched for learning purposes
@@ -92,8 +91,7 @@ public class Main
             cars.removeAll(carsToRemove);
 
             //Spawn cars onto map extremities
-            for (Coords roadEntrance : map.getRoadEntrances())
-            {
+            for (Coords roadEntrance : map.getRoadEntrances()) {
                 if (
                     Math.random() <= trafficDensityThreshold &&
                     !currentState.carAt(roadEntrance)
@@ -111,18 +109,23 @@ public class Main
             }
             nextState.addCars(cars);
             
+
+            
+
             // Updates q-values
-            //Learns for first 100,000 only
-            if (timeToRun <= 100000)
-            {
-                //calculate reward and state code for each traffic light
-                for (TrafficLight light : trafficLights) {
-                    rewards.add(learningModule.reward(nextState.stateCode(light)));
-                    nextStates.add(nextState.stateCode(light));
-                }
-                //To learn we need to pass through - previous states, actions taken, rewards
-                learningModule.learn(states, switchedLights, rewards, nextStates, trafficLights);
+            //calculate reward and state code for each traffic light
+            for (TrafficLight light : trafficLights) {
+                rewards.add(
+                    learningModule.reward(nextState.stateCode(light))
+                );
+                nextStates.add(nextState.stateCode(light));
             }
+            //To learn we need to pass through - previous states, 
+            //actions taken, rewards
+            learningModule.learn(
+                states, switchedLights, rewards, nextStates, 
+                trafficLights
+            );
 
             if (timeToRun >= quietTime) {
                 if (graphicalOutput) {
@@ -132,19 +135,8 @@ public class Main
                     map.print(cars, trafficLights);
                 }
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(300);
                 } catch (Exception e) {}
-            }
-            
-            //Learns 1000000 time steps and then lets us watch it
-            if (timeToRun > 1000000) {
-	            map.print(cars, trafficLights);
-	            try {
-	                Thread.sleep(1000);
-	            }
-	            catch (InterruptedException e) {
-	                e.printStackTrace();
-	            }
             }
         }
     }

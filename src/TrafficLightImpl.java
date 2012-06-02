@@ -39,18 +39,13 @@ public class TrafficLightImpl implements TrafficLight {
         return delay;
     }
 
-    public Boolean clock() {
+    public void clock() {
         if (delay > 0) {
             delay--;
-            //used for amber - switches light as it comes off delay
             if (delay == 0) {
                 horizontalGreen = !horizontalGreen;
-                return true;
-            } else {
-                return false;
             }
         }
-        return false;
     }
 
     @Override

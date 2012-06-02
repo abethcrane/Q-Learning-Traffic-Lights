@@ -36,21 +36,21 @@ public class LearningModuleImpl implements LearningModule
     public List<Boolean> updateTrafficLights(
             RoadMap r,
             List<TrafficLight> trafficLights
-            ) {
+    ) {
         List<Boolean> switches = new ArrayList<Boolean>();
         // Less naive, using the optimal policy (i.e. best q-value)
         for (TrafficLight t : trafficLights) {
             if (t.getDelay() == 0) {
                 Action a = getAction(r, t);
+                switches.add(a.action());
                 if (a.action()) { // if we add more actions, change this
                     t.switchLight();
-                } else {
-                    switches.add(t.clock());
                 }
             } else {
                 //decrements counter and switches if necessary
-                switches.add(t.clock());
+                switches.add(t.getDelay() == 1);
             }
+            t.clock();
         }
         return switches;
     }

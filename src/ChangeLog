@@ -1,3 +1,22 @@
+2012-06-02 19:11:12 Gill <gmail gillemorris>
+	* Viewer.java: now displays amber lights, intersection is
+	    road-colored, cars are now rectangles not squares. -- i still
+		intend to use arrows but they're currently buggy. i'll sleep
+		on it
+	* Main.java: vars runTime, quietTime, consoleOutput
+	    now used appropriately
+	* interfaces/TrafficLight.java: `clock' again has type void;
+	    performing but a single function. the required expression 
+	    for whether the light is about to change was 
+	    `getDelay() == 1' - assuming i'm reading it correctly - 
+	    which has no side effects
+	* TrafficLightImpl.java: updated accordingly.
+	* LearnerModuleImpl.java: tidied up updateTrafficLights slightly
+	    - necessary because it treated TrafficLight.clock() as a
+	    boolean. the intention is to eventually move 
+	    RoadMap.stateCode() and all learner logic from Main into
+	    LearnerModuleImpl.
+
 2012-06-02 16:23:10 Gill <gmail gillemorris>
 	Haven't read ChangeLog or implemented a bunch of stuff I wanted
 	to; wanted to get these fixes pushed reasonably quicky.

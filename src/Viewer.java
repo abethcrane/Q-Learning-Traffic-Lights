@@ -29,6 +29,7 @@ public class Viewer extends JFrame {
 
     private static final Color backgroundColor = new Color(0x7e7e7e);
     private static final Color roadColor = new Color(0x212323);
+    private static final Color intersectBackground = roadColor;
     private static final int darkish = 0x3f;
 
     public Viewer() {
@@ -60,10 +61,16 @@ public class Viewer extends JFrame {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; ++j) {
                 Coords k = new Coords(i, j);
-                if (k != null) if (m.roadAt(k)) {
+                if (m.roadAt(k)) {
                     g.fillRect(u*i, u*j, u, u);
                 }
             }
+        }
+
+        g.setColor(intersectBackground);
+        for (TrafficLight i : l) {
+            int x = i.getCoords().getX(), y = i.getCoords().getY();
+            g.fillRect(u*x, u*y, u, u);
         }
         
         for (Car i : c) {
@@ -71,24 +78,28 @@ public class Viewer extends JFrame {
             int dx = i.getDirection().getXSpeed();
             int dy = i.getDirection().getYSpeed();
             g.setColor(
-                //x == y ? Color.red :
-                    //l.get(0).horizontalGreen() ? new Color(0,darkish,0)
-                    //: new Color(0, 0, darkish) :
-                //dy == 0 ? new Color(0, y < 20 ? (int)(255*Math.random()) : darkish, 0) :
-                //dx == 0 ? new Color(0, 0, x < 20 ? (int)(255*Math.random()) : darkish) :
                 dy == 0 ? Color.green :
                 dx == 0 ? Color.blue :
                     Color.magenta
             );
-            g.fillRect(u*x, u*y, u, u);
+            int p = dx == 0 ? w : 1, q = dy == 0 ? w : 1;
+            g.fillRect(u*x+p, u*y+q, u-2*p, u-2*q);
         }
 
         for (TrafficLight i : l) {
             int x = i.getCoords().getX(), y = i.getCoords().getY();
-            g.setColor(i.horizontalGreen() ? Color.green : Color.red);
+            g.setColor(
+                i.horizontalGreen() && i.getDelay() > 0 ? Color.orange :
+                i.horizontalGreen() ? Color.green :
+                    Color.red
+            );
             g.fillRect(u*x+w, u*y, u-2*w, w);
             g.fillRect(u*x+w, u*(y+1)-w, u-2*w, w);
-            g.setColor(!i.horizontalGreen() ? Color.green : Color.red);
+            g.setColor(
+                !i.horizontalGreen() && i.getDelay() > 0 ? Color.orange:
+                !i.horizontalGreen() ? Color.green :
+                    Color.red
+            );
             g.fillRect(u*x, u*y+w, w, u-2*w);
             g.fillRect(u*(x+1)-w, u*y+w, w, u-2*w);
         }
