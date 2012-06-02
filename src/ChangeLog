@@ -1,3 +1,14 @@
+2012-06-02 16:23:10 Gill <gmail gillemorris>
+	Haven't read ChangeLog or implemented a bunch of stuff I wanted
+	to; wanted to get these fixes pushed reasonably quicky.
+
+	* interfaces/Car.java: provisionally features `car.getDirection'
+	* CarImpl.java:        implements this
+	* RoadMapImpl.java:    fixed bug where the bottom-right border
+	                       of the map was considered a road
+	* Viewer.java:         now produces sensible output given
+	                       bidirectional traffic
+
 2012-06-02 3:00 pm Nathan
 	    -added dual lanes - basically only needed to modify the 'car.update velocity'
 	    code to correctly sense it was approaching a traffic light, add some new road

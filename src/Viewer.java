@@ -56,14 +56,6 @@ public class Viewer extends JFrame {
     }
 
     private void displayMap(Graphics g) {
-        String apology = "should be less flickery soon";
-        // ^ to this end repaint(int, int, int, int) could be of
-        // much help. i'm assuming java just takes fucking forever to
-        // draw ~2000 pixels.
-        //
-        // edit: possibly just dwm as usual. it never did work with java
-        g.drawString("Hello, world!", n*u/4, n*u/4);
-        g.drawString(apology, n*u/32, n*u/4+2*u);
         g.setColor(roadColor);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; ++j) {
@@ -76,12 +68,16 @@ public class Viewer extends JFrame {
         
         for (Car i : c) {
             int x = i.getCoords().getX(), y = i.getCoords().getY();
+            int dx = i.getDirection().getXSpeed();
+            int dy = i.getDirection().getYSpeed();
             g.setColor(
-                x == y ? 
-                    l.get(0).horizontalGreen() ? new Color(0,darkish,0)
-                    : new Color(0, 0, darkish) :
-                x == 20 ? new Color(0, y < 20 ? 255*y/20 : darkish, 0) :
-                y == 20 ? new Color(0, 0, x < 20 ? 255*x/20 : darkish) :
+                //x == y ? Color.red :
+                    //l.get(0).horizontalGreen() ? new Color(0,darkish,0)
+                    //: new Color(0, 0, darkish) :
+                //dy == 0 ? new Color(0, y < 20 ? (int)(255*Math.random()) : darkish, 0) :
+                //dx == 0 ? new Color(0, 0, x < 20 ? (int)(255*Math.random()) : darkish) :
+                dy == 0 ? Color.green :
+                dx == 0 ? Color.blue :
                     Color.magenta
             );
             g.fillRect(u*x, u*y, u, u);
@@ -91,8 +87,10 @@ public class Viewer extends JFrame {
             int x = i.getCoords().getX(), y = i.getCoords().getY();
             g.setColor(i.horizontalGreen() ? Color.green : Color.red);
             g.fillRect(u*x+w, u*y, u-2*w, w);
+            g.fillRect(u*x+w, u*(y+1)-w, u-2*w, w);
             g.setColor(!i.horizontalGreen() ? Color.green : Color.red);
             g.fillRect(u*x, u*y+w, w, u-2*w);
+            g.fillRect(u*(x+1)-w, u*y+w, w, u-2*w);
         }
 
     }

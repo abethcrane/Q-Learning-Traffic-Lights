@@ -53,6 +53,11 @@ public class CarImpl implements Car
          return position;
     }
 
+    public Velocity getDirection()
+    {
+        return direction;
+    }
+
     @Override
     public boolean hasLeftMap(RoadMap map)
     {

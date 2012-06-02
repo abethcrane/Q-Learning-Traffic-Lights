@@ -1,7 +1,7 @@
 package interfaces;
 
 import interfaces.TrafficLight;
-import utils.Coords;
+import utils.*;
 
 import java.util.List;
 
@@ -21,6 +21,10 @@ public interface Car
     void updatePosition();
 
     Coords getCoords();
+
+    //adding this is the quickest way to get graphics working for
+    //the new RoadMap. hoping to delete, however.
+    Velocity getDirection();
 
     //flag to remove the car if it has left the road
     boolean hasLeftMap(RoadMap map);

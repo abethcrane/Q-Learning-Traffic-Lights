@@ -35,8 +35,9 @@ public class RoadMapImpl implements RoadMap {
             for (int j = 0; j < gridSize; j++) {
                 grid[i][j] = 'x';
                 for (Coords k : roadEntrances) {
-                    if ((i > 0 && i == k.getX()) || 
-                            (j > 0 && j == k.getY())) {
+                    if ((0 < i && i < gridSize-1 && i == k.getX()) || 
+                        (0 < j && j < gridSize-1 && j == k.getY()))
+                    {
                         grid[i][j] = roadChar;
                     }
                 }
