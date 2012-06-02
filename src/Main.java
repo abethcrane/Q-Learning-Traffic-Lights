@@ -13,8 +13,6 @@ import interfaces.TrafficLight;
 import utils.Coords;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.*;
-import javax.swing.*;
 
 public class Main
 {
@@ -29,16 +27,13 @@ public class Main
         //           is to make the poor thing learn everything again
         //           each time it runs before worrying about it. -- Gill
 
-        //Initialise map, list of cars currently on map, and list of 
-        //trafficlights
-        
-    	
     	int runTime = 1001000;
         int quietTime = 1000000;
         boolean graphicalOutput = true;
         boolean consoleOutput = false;
 
-    	
+        //Initialise map, list of cars currently on map, and list of 
+        //trafficlights
         RoadMap map = new RoadMapImpl();
         List<Car> cars = new ArrayList<Car>();
         List<TrafficLight> trafficLights = 
@@ -154,9 +149,9 @@ public class Main
                 if (consoleOutput) {
                     map.print(cars, trafficLights);
                 }
-	            try {
-	                Thread.sleep(1000);
-	            }
+                try {
+                    Thread.sleep(1000);
+                }
 	            catch (InterruptedException e) {
 	                e.printStackTrace();
 	            }

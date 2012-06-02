@@ -13,7 +13,7 @@ import utils.Velocity;
 import java.util.List;
 
 //Roadmap Interface - contains a representation of the road and intersections
-public interface RoadMap 
+public interface RoadMap
 {
     //Prints a representation of the map to screen
     void print(List<Car> cars, List<TrafficLight> trafficLights);

@@ -17,12 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import java.awt.Graphics;
-import java.awt.Canvas;
-
 //Roadmap Implementation class - implements methods from interfaces.RoadMap
 public class RoadMapImpl implements RoadMap {
-    private static final int unitSize = 10;
     public final int gridSize = 40;
     private final Coords[] defaultEntrances =
         {new Coords(0, gridSize/2), new Coords(gridSize/2, 0)};
@@ -83,19 +79,18 @@ public class RoadMapImpl implements RoadMap {
         System.out.println();
     }
 
-    public void paint(Graphics g) {
-        g.drawString("Painting!", 40, 40);
-    }
-
     @Override
     // Hash = 4 digit number (longer if more roads are added)
     /*
-    1st - closest car position from intersection for road 1 (0-8, 9 if no cars) X
-    2nd - closest car position from intersection for road 2 (0-8, 9 if no cars X
-    3rd - light setting (ie 0-green, 1 red for one of the roads) X
-    4th - light delay (0-3)
+        1st - closest car position from intersection for road 1 
+              (0-8, 9 if no cars) X
+        2nd - closest car position from intersection for road 2 
+              (0-8, 9 if no cars X
+        3rd - light setting (ie 0-green, 1 red for one of the roads) X
+        4th - light delay (0-3)
      */
-    // Needs to take in traffic light so it can tell which one to work the things out for
+    // Needs to take in traffic light so it can tell which one to work
+    // the things out for
     public int stateCode(TrafficLight t) {
         int hash = 0;
 

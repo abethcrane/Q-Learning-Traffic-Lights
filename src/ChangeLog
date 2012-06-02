@@ -1,7 +1,11 @@
 2012-06-02 08:30:32 Gill <gmail gillemorris>
 	Query: whoever made the substantial changes to Main and 
 	interfaces - can you explain what you've done? I... hope
-	everything still works.
+	everything still works. Though a brief inspection of the output
+	indicates its learning quite well.
+	    Also, can we take stateCode out of RoadMap? The value thus
+	computed is basically useless to everything except
+	LearnerModuleImpl.
 
 	* Viewer.java: exists. provides graphical output functionality.
 	* Main.java: uses this functionality.
