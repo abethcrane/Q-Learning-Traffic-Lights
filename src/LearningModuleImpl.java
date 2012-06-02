@@ -6,10 +6,7 @@ Gill Morris
 Nathan Wilson
  */
 
-import interfaces.LearningModule;
-import interfaces.TrafficLight;
-import interfaces.RoadMap;
-import interfaces.Action;
+import interfaces.*;
 
 import java.util.*;
 
@@ -176,7 +173,23 @@ public class LearningModuleImpl implements LearningModule
         return rewardNum;
     }
 
-    
+    //naive implementation of reward where you are penalised for each stopped car
+    public int reward3(List<Car> cars, TrafficLight light) {
+        int count = 0;
+        for (Car car : cars) {
+            if (car.stopped())
+            {
+                count++;
+            }
+        }
+        if (light.getDelay() == 3) {
+            count += 10;//extra penalty for switch
+        }
+        return Math.round((float)0.1 * count);
+    }
+
+
+
     public Action getAction (RoadMap r, TrafficLight t) {
         ActionImpl a;
 

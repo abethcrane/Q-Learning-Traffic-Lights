@@ -25,7 +25,7 @@ public class Viewer extends JFrame {
 
     private static final int u = 10;
     private static final int w = 3; // we require 2*w < u
-    /* FIXME */ private static final int n = 40;
+    /* FIXME */ private static final int n = 60;
 
     private static final Color backgroundColor = new Color(0x7e7e7e);
     private static final Color roadColor = new Color(0x212323);

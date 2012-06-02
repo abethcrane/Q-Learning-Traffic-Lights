@@ -38,9 +38,11 @@ public class Main
         List<Car> cars = new ArrayList<Car>();
         List<TrafficLight> trafficLights = 
                 new ArrayList<TrafficLight>();
-        trafficLights.add(
-                new TrafficLightImpl(new Coords(19, 19),false));
-        double trafficDensityThreshold = 0.3;
+        trafficLights.add(new TrafficLightImpl(new Coords(20, 20),false));
+        trafficLights.add(new TrafficLightImpl(new Coords(20, 40),true));
+        trafficLights.add(new TrafficLightImpl(new Coords(40, 20),true));
+        trafficLights.add(new TrafficLightImpl(new Coords(40, 40),false));
+        double trafficDensityThreshold = 0.25;
         LearningModule learningModule = new LearningModuleImpl();
         Viewer v = new Viewer();
 
@@ -83,7 +85,7 @@ public class Main
             for (Car car : cars) {
                 // FIXME: assumes map contains a single light 
                 // (will fix when we add lights)
-                car.updateVelocity(trafficLights.get(0), currentState);
+                car.updateVelocity(currentState.getClosestTrafficLight(car, trafficLights), currentState);
                 car.updatePosition();
                 if (car.hasLeftMap(map)) {
                      carsToRemove.add(car);

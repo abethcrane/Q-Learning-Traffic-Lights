@@ -30,4 +30,6 @@ public interface Car
     boolean hasLeftMap(RoadMap map);
 
     char getChar();
+
+    boolean stopped();
 }

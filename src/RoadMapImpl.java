@@ -19,10 +19,17 @@ import java.util.List;
 
 //Roadmap Implementation class - implements methods from interfaces.RoadMap
 public class RoadMapImpl implements RoadMap {
-    public final int gridSize = 40;
+    public final int gridSize = 60;
     private final Coords[] defaultEntrances =
-        {new Coords(gridSize-1, gridSize/2-2), new Coords(gridSize/2-2, 0),
-        new Coords(0, gridSize/2), new Coords(gridSize/2, gridSize-1)};
+        {new Coords(0, 21),
+                new Coords(0, 41),
+                new Coords(59, 19),
+                new Coords(59, 39),
+                new Coords(19, 0),
+                new Coords(39, 0),
+                new Coords(21, 59),
+                new Coords(41, 59),
+        };
     private final char carChar = 'C';
     private final int roadChar = ' ';
     private char[][] grid;
@@ -223,6 +230,43 @@ public class RoadMapImpl implements RoadMap {
     }
 
     @Override
+    public boolean roomToCrossIntersection(Coords position, Velocity direction, TrafficLight l)
+    {
+        //set coords for start of intersection
+        Coords trafficLightCoords = trafficLightCoords(direction, l);
+        //iterate for thirteen squares from start of intersection, counting blanks
+        int blankRoadTiles = 0;
+        Coords current = new Coords(trafficLightCoords.getX(), trafficLightCoords.getY());
+        for (int i = 0; i < 20; i++) {
+            if (!carAt(current)) {
+                blankRoadTiles++;
+            }
+            current.setX(current.getX() + direction.getXSpeed());
+            current.setY(current.getY() + direction.getYSpeed());
+        }
+        //4 tiles - three for intersection, one for car on other side
+        return blankRoadTiles >= 4;
+    }
+
+    @Override
+    public TrafficLight getClosestTrafficLight(Car car, List<TrafficLight> trafficLights)
+    {
+        //Iterate along road in direction of car, return traffic light first encountered or null
+       Coords coords = new Coords(car.getCoords().getX(), car.getCoords().getY());
+        while (!(coords.getX() < 0) && !(coords.getY() < 0) &&
+                !(coords.getX() >= 60) && !(coords.getY() >= 60)) {
+            for (TrafficLight t : trafficLights) {
+                if (coords.equals(trafficLightCoords(car.getDirection(), t))) {
+                    return t;
+                }
+            }
+            coords.setX(coords.getX() + car.getDirection().getXSpeed());
+            coords.setY(coords.getY() + car.getDirection().getYSpeed());
+        }
+        return trafficLights.get(0);
+    }
+
+    @Override
     public List<Coords> getRoadEntrances() {
         return roadEntrances;
     }
@@ -267,20 +311,7 @@ public class RoadMapImpl implements RoadMap {
         current.setX(current.getX() + direction.getXSpeed());
         current.setY(current.getY() + direction.getYSpeed());
         //need different traffic light coords depending on direction
-        Coords trafficLightCoords = new Coords(0,0);
-        if (direction.getXSpeed() == 0) {
-            if (direction.getYSpeed() == 1) {
-                trafficLightCoords = trafficLight.getCoords().left().up();
-            } else if (direction.getYSpeed() == -1) {
-                trafficLightCoords = trafficLight.getCoords().right().down();
-            }
-        } else if (direction.getYSpeed() == 0) {
-            if (direction.getXSpeed() == 1) {
-                trafficLightCoords = trafficLight.getCoords().right().up();
-            } else if (direction.getXSpeed() == -1) {
-                trafficLightCoords = trafficLight.getCoords().left().down();
-            }
-        }
+        Coords trafficLightCoords = trafficLightCoords(direction, trafficLight);
 
         while (current.getX() < gridSize && current.getX() >= 0 &&
                 current.getY() < gridSize && current.getY() >= 0 &&
@@ -322,5 +353,22 @@ public class RoadMapImpl implements RoadMap {
         }
         return newGrid;
     }
-    
+
+    private Coords trafficLightCoords(Velocity direction, TrafficLight trafficLight) {
+        Coords trafficLightCoords = new Coords(0,0);
+        if (direction.getXSpeed() == 0) {
+            if (direction.getYSpeed() == 1) {
+                trafficLightCoords = trafficLight.getCoords().left().up();
+            } else if (direction.getYSpeed() == -1) {
+                trafficLightCoords = trafficLight.getCoords().right().down();
+            }
+        } else if (direction.getYSpeed() == 0) {
+            if (direction.getXSpeed() == 1) {
+                trafficLightCoords = trafficLight.getCoords().right().up();
+            } else if (direction.getXSpeed() == -1) {
+                trafficLightCoords = trafficLight.getCoords().left().down();
+            }
+        }
+        return trafficLightCoords;
+    }
 }

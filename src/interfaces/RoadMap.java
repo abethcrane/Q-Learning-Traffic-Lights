@@ -46,6 +46,11 @@ public interface RoadMap
 	
 	// A variant on the stateCode
 	// Instead of storing the closet car position for each road, it counts how many are stopped on each road 
-	int stateCode2(TrafficLight t);	
-	
+	int stateCode2(TrafficLight t);
+
+    //returns true if there is room for a car at p to cross the intersection in a direction
+    //calculates by counting blank squares thirteen tiles from position
+    boolean roomToCrossIntersection(Coords position, Velocity direction, TrafficLight l);
+
+    TrafficLight getClosestTrafficLight(Car car, List<TrafficLight> trafficLights);
 }

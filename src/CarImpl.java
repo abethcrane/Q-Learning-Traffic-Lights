@@ -34,8 +34,8 @@ public class CarImpl implements Car
         // pass through a traffic light iff !light.horizontalGreen()
         boolean stop =
                 (m.nextNonCarSquareIsTrafficLight(position, direction, l))&&
-                        ((direction.getXSpeed() !=0) == l.horizontalGreen() ||
-                          l.getDelay() != 0);
+                        (((direction.getXSpeed() !=0) == l.horizontalGreen() ||
+                          l.getDelay() != 0) || !m.roomToCrossIntersection(position, direction, l));
         velocity.setXSpeed(stop ? 0 : direction.getXSpeed());
         velocity.setYSpeed(stop ? 0 : direction.getYSpeed());
     }
@@ -62,8 +62,8 @@ public class CarImpl implements Car
     public boolean hasLeftMap(RoadMap map)
     {
         return
-            position.getX() < 0 || position.getX() >= 40 ||
-            position.getY() < 0 || position.getY() >= 40;
+            position.getX() < 0 || position.getX() >= 60 ||
+            position.getY() < 0 || position.getY() >= 60;
     }
 
     @Override
@@ -78,5 +78,11 @@ public class CarImpl implements Car
         } else {
             return '>';
         }
+    }
+
+    @Override
+    public boolean stopped()
+    {
+        return position.getX() == 0 && position.getY() == 0;
     }
 }
