@@ -1,3 +1,28 @@
+2012-06-03 6:03: -- Nathan
+    *updated to have 4 traffic lights. this required some reworking of
+     how we update car velocities as we don't want to move a car across
+     an intersection when there is no room for it on the other side
+    *a few other minor changes here and there to handle a larger map, etc
+    *tried to implement turning cars but backed out before it got too
+     complex. I don't think we should bother with implementing this - it
+     requires quite a lot of fiddlyness to do and really adds very little
+     value to the learning as our learning depends only on cars waiting,
+     not on direction they could be turning
+
+2012-06-03 04:36:-- Gill <gmail gillemorris>
+	* Viewer.java: added some rudimentary error checking
+	* RoadMapImp.java: catAt and roadAt no longer switch the axes.
+	    also, decided we needed to follow convention in our definitions
+	    of x-direction and y-direction or things would quickly become
+	    unmaintainable.
+	* interfaces/Car.java: removed duplicate functionality of getChar
+	* interfaces/TrafficLight.java: clarified some specs; comments now
+	    reflect its actual functionality
+	* CarImpl.java: removed getChar; expanded slightly the logic of
+		`stop' in `updateVelocity'
+	* LearningModuleImpl.java: updated directional convention, and then
+	    speculated on why there are so many 0 q-values.
+
 2012-06-02 19:11:12 Gill <gmail gillemorris>
 	* Viewer.java: now displays amber lights, intersection is
 	    road-colored, cars are now rectangles not squares. -- i still

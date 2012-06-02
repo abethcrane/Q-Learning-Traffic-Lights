@@ -13,7 +13,7 @@ Beth Crane
 Gill Morris
 Nathan Wilson
 */
-public class CarImpl implements Car
+public class CarImpl implements Car 
 {
     private Coords position;
     private Velocity velocity;
@@ -30,12 +30,13 @@ public class CarImpl implements Car
     @Override
     public void updateVelocity(TrafficLight l, RoadMap m)
     {
-        // this assumes that a car travelling in the x-direction may
-        // pass through a traffic light iff !light.horizontalGreen()
+        boolean greenLight = 
+            l.getDelay() == 0 &&
+            l.horizontalGreen() == (direction.getYSpeed() == 0) &&
+            m.roomToCrossIntersection(position, direction, l);
         boolean stop =
-                (m.nextNonCarSquareIsTrafficLight(position, direction, l))&&
-                        (((direction.getXSpeed() !=0) == l.horizontalGreen() ||
-                          l.getDelay() != 0) || !m.roomToCrossIntersection(position, direction, l));
+            !greenLight &&
+            m.nextNonCarSquareIsTrafficLight(position, direction, l);
         velocity.setXSpeed(stop ? 0 : direction.getXSpeed());
         velocity.setYSpeed(stop ? 0 : direction.getYSpeed());
     }

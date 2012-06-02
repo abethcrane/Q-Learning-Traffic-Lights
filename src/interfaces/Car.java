@@ -14,19 +14,20 @@ Nathan Wilson
 */
 public interface Car
 {
-    //Updates the velocity of a car given whether the traffic light is immediately in front and is red
+    //Updates the velocity of a car given whether the traffic light 
+    //is immediately in front and is red
     void updateVelocity(TrafficLight trafficLight, RoadMap mapWithCars);
 
-    //Updates the position of the car by incrementing x/y by velocity x/y
+    //Updates the position of the car by incrementing x/y by velocity
     void updatePosition();
 
     Coords getCoords();
 
-    //adding this is the quickest way to get graphics working for
-    //the new RoadMap. hoping to delete, however.
+    //the direction the car would like to be going.
+    //note that this is nonzero even if stopped at a light
     Velocity getDirection();
 
-    //flag to remove the car if it has left the road
+    //whether the car is on the given map
     boolean hasLeftMap(RoadMap map);
 
     char getChar();
