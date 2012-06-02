@@ -6,12 +6,6 @@ Gill Morris
 Nathan Wilson
  */
 
-// The intention is to change every occurrence of
-// (List<Cars> cars, List<TrafficLights> trafficLights
-// to
-// State s
-// Ceebs now.
-
 import interfaces.Car;
 import interfaces.RoadMap;
 import interfaces.Action;
@@ -23,13 +17,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import java.awt.Graphics;
+import java.awt.Canvas;
 
 //Roadmap Implementation class - implements methods from interfaces.RoadMap
 public class RoadMapImpl implements RoadMap {
+    private static final int unitSize = 10;
     public final int gridSize = 40;
     private final Coords[] defaultEntrances =
         {new Coords(0, gridSize/2), new Coords(gridSize/2, 0)};
     private final char carChar = 'C';
+    private final int roadChar = ' ';
     private char[][] grid;
     private List<Coords> roadEntrances = new ArrayList<Coords>();
 
@@ -41,8 +39,8 @@ public class RoadMapImpl implements RoadMap {
                 grid[i][j] = 'x';
                 for (Coords k : roadEntrances) {
                     if ((i > 0 && i == k.getX()) || 
-                        (j > 0 && j == k.getY())) {
-                        	grid[i][j] = ' ';
+                            (j > 0 && j == k.getY())) {
+                        grid[i][j] = roadChar;
                     }
                 }
             }
@@ -83,6 +81,10 @@ public class RoadMapImpl implements RoadMap {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public void paint(Graphics g) {
+        g.drawString("Painting!", 40, 40);
     }
 
     @Override
@@ -183,7 +185,7 @@ public class RoadMapImpl implements RoadMap {
         Coords current = new Coords(start.getX(), start.getY());
         while (current.getX() < gridSize && current.getX() >= 0 &&
                 current.getY() < gridSize && current.getY() >= 0 &&
-                (grid[current.getX()][current.getY()] != ' ') &&
+                (grid[current.getX()][current.getY()] != roadChar) &&
                 !trafficLight.getCoords().equals(current))
         {
             current.setX(current.getX() + direction.getXSpeed());
@@ -195,15 +197,18 @@ public class RoadMapImpl implements RoadMap {
     }
 
     @Override
-    public boolean carAt(Coords coords)
-    {
-        boolean result = false;
-        if (coords.getX() >= 0 && coords.getY() >= 0 && coords.getX() < gridSize && coords.getY() < gridSize ){
-            if (grid[coords.getX()][coords.getY()] == carChar) {
-                result = true;
-            }
-        }
-        return result;
+    public boolean carAt(Coords coords) {
+        return  
+            0 <= coords.getX() && coords.getX() < gridSize &&
+            0 <= coords.getX() && coords.getX() < gridSize &&
+            grid[coords.getX()][coords.getY()] == carChar;
+    }
+    
+    public boolean roadAt(Coords coords) {
+        return  
+            0 <= coords.getX() && coords.getX() < gridSize &&
+            0 <= coords.getX() && coords.getX() < gridSize &&
+            grid[coords.getX()][coords.getY()] == roadChar;
     }
 
     private char[][] copyGrid(char[][] grid)

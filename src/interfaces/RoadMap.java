@@ -13,7 +13,7 @@ import utils.Velocity;
 import java.util.List;
 
 //Roadmap Interface - contains a representation of the road and intersections
-public interface RoadMap
+public interface RoadMap 
 {
     //Prints a representation of the map to screen
     void print(List<Car> cars, List<TrafficLight> trafficLights);
@@ -35,6 +35,9 @@ public interface RoadMap
 
     //Returns true if there is a car at the specified coord
     boolean carAt(Coords coords);
+
+    //Returns true if there is a road at the specified coord
+    boolean roadAt(Coords coords);
 
 	int hashCode(TrafficLight t, Action a);
 }

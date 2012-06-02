@@ -13,6 +13,8 @@ import interfaces.TrafficLight;
 import utils.Coords;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.*;
+import javax.swing.*;
 
 public class Main
 {
@@ -29,8 +31,13 @@ public class Main
 
         //Initialise map, list of cars currently on map, and list of 
         //trafficlights
+        
     	
     	int runTime = 1001000;
+        int quietTime = 1000000;
+        boolean graphicalOutput = true;
+        boolean consoleOutput = false;
+
     	
         RoadMap map = new RoadMapImpl();
         List<Car> cars = new ArrayList<Car>();
@@ -41,6 +48,7 @@ public class Main
                 new TrafficLightImpl(new Coords(20,20),false));
         double trafficDensityThreshold = 0.4;
         LearningModule learningModule = new LearningModuleImpl();
+        Viewer v = new Viewer();
 
         //Basic logic for each time step
         // - change traffic lights if required - call a function from 
@@ -48,7 +56,8 @@ public class Main
         // - move cars in their current direction by velocity (modify 
         //   velocity if necessary - using CarAI)
         // - spawn cars at extremities
-        // Now that we have the new state, update the qvalue for the previous s,a pair
+        // - Now that we have the new state, update the qvalue for the p
+        //   revious s,a pair
         for (int timeToRun = 0; timeToRun < runTime; ++timeToRun) {
             RoadMap currentState = map.copyMap();
             RoadMap nextState = map.copyMap();
@@ -83,25 +92,30 @@ public class Main
                     // should probably model that there's a queue
                     // outside the map and/or fail our traffic light
                     // learner
-                    cars.add(new CarImpl
-                    (
-                        new Coords(roadEntrance),
-                        map.getStartingVelocity(roadEntrance)
-                    ));
+                    Car c = new CarImpl(
+                            new Coords(roadEntrance),
+                            map.getStartingVelocity(roadEntrance));
+                    cars.add(c);
                 }
             }
 
             nextState.addCars(cars);
             
             // Updates q-values
-            learningModule.learn(currentState, nextState, trafficLights);
+            learningModule.learn
+                    (currentState, nextState, trafficLights);
             for (TrafficLight light : trafficLights) {
                 light.clock();
             }
 
             //Learns 1000000 time steps and then lets us watch it
-            if (timeToRun > 1000000) {
-	            map.print(cars, trafficLights);
+            if (timeToRun >= quietTime) {
+                if (graphicalOutput) {
+                    v.view(map, cars, trafficLights);
+                }
+                if (consoleOutput) {
+                    map.print(cars, trafficLights);
+                }
 	            try {
 	                Thread.sleep(1000);
 	            }
