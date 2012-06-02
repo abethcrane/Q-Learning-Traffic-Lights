@@ -152,9 +152,9 @@ public class Main
                 try {
                     Thread.sleep(1000);
                 }
-	            catch (InterruptedException e) {
-	                e.printStackTrace();
-	            }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             for (TrafficLight light : trafficLights) {
                 light.clock();
