@@ -38,7 +38,7 @@ public class Main
                 new ArrayList<TrafficLight>();
         trafficLights.add(
                 new TrafficLightImpl(new Coords(20,20),false));
-        double trafficDensityThreshold = 0.3;
+        double trafficDensityThreshold = 0.4;
         LearningModule learningModule = new LearningModuleImpl();
 
         //Basic logic for each time step
@@ -56,19 +56,20 @@ public class Main
             List<Integer> nextStates = new ArrayList<Integer>();
             List<Integer> rewards = new ArrayList<Integer>();
 
-            // Save code for the current state
-            //if (timeToRun <= 1000000) {
+            //Two different modes - while learning, and after learning
+            //While learning we determine switching randomly and make the algorithm 'learn' qvalues
+            //After learning we determine switching using above qvalues
+
+            // Update the traffic lights - switch or stay
+            if (timeToRun <= 100000) {
                 //Get integer representing state BEFORE cars are moved and lights are switched
                 for (TrafficLight light: trafficLights) {
                     states.add(currentState.stateCode(light));
                 }
-            //}
-
-            //decrements countdown, switch lights if necessary and save action taken
-                switchedLights = learningModule.updateTrafficLights(
+            }
+            switchedLights = learningModule.updateTrafficLights(
                         currentState, trafficLights);
 
-            //copy map to next iteration
             RoadMap nextState = currentState.copyMap();
 
             //Move cars currently on map
@@ -102,9 +103,9 @@ public class Main
             nextState.addCars(cars);
             
             // Updates q-values
-            //Learns for first 1,000,000 only
-            //if (timeToRun <= 1000000)
-            //{
+            //Learns for first 100,000 only
+            if (timeToRun <= 100000)
+            {
                 //calculate reward and state code for each traffic light
                 for (TrafficLight light : trafficLights) {
                     rewards.add(learningModule.reward(nextState.stateCode(light)));
@@ -112,7 +113,7 @@ public class Main
                 }
                 //To learn we need to pass through - previous states, actions taken, rewards
                 learningModule.learn(states, switchedLights, rewards, nextStates, trafficLights);
-            //}
+            }
 
             //Learns 1000000 time steps and then lets us watch it
             if (timeToRun > 1000000) {

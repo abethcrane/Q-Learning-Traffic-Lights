@@ -30,12 +30,17 @@ public interface RoadMap
     //add cars from the given list onto the map
     void addCars(List<Car> cars);
 
-    //returns true if the next unoccupied square in the direction of 'direction' from the position 'start' is a traffic light
+    //returns true if the next unoccupied square in the direction of
+    //'direction' from the position 'start' is a traffic light
     boolean nextNonCarSquareIsTrafficLight(Coords start, Velocity direction, TrafficLight trafficLight);
 
     //Returns true if there is a car at the specified coord
     boolean carAt(Coords coords);
 
-    //This is not a hashcode, a hashcode is a code returned by an object to uniquely represent itself and does not take parameters
+    //Returns true if there is a road at the specified coord
+    boolean roadAt(Coords coords);
+
+    //This is not a hashcode, a hashcode is a code returned by an object
+    //to uniquely represent itself and does not take parameters
 	int stateCode(TrafficLight t);
 }

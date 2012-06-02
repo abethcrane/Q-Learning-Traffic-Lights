@@ -29,8 +29,8 @@ public class RoadMapImpl implements RoadMap {
     public final int gridSize = 40;
     private final Coords[] defaultEntrances =
         {new Coords(0, gridSize/2), new Coords(gridSize/2, 0)};
-         //new Coords(0, gridSize/2 - 2), new Coords(gridSize/2 - 2, 0)};
     private final char carChar = 'C';
+    private final int roadChar = ' ';
     private char[][] grid;
     private List<Coords> roadEntrances = new ArrayList<Coords>();
 
@@ -41,9 +41,9 @@ public class RoadMapImpl implements RoadMap {
             for (int j = 0; j < gridSize; j++) {
                 grid[i][j] = 'x';
                 for (Coords k : roadEntrances) {
-                    if ((i > 0 && i == k.getX()) ||
-                        (j > 0 && j == k.getY())) {
-                        	grid[i][j] = ' ';
+                    if ((i > 0 && i == k.getX()) || 
+                            (j > 0 && j == k.getY())) {
+                        grid[i][j] = ' ';
                     }
                 }
             }
@@ -97,7 +97,8 @@ public class RoadMapImpl implements RoadMap {
     2nd - closest car position from intersection for road 2 (0-8, 9 if no cars X
     3rd - light setting (ie 0-green, 1 red for one of the roads) X
      */
-    // Needs to take in traffic light so it can tell which one to work the things out for
+    // Needs to take in traffic light so it can tell which one to work
+    // the things out for
     public int stateCode(TrafficLight t) {
         int hash = 0;
 
@@ -183,7 +184,7 @@ public class RoadMapImpl implements RoadMap {
 
         while (current.getX() < gridSize && current.getX() >= 0 &&
                 current.getY() < gridSize && current.getY() >= 0 &&
-                (grid[current.getX()][current.getY()] != ' ') &&
+                (grid[current.getX()][current.getY()] != roadChar) &&
                 !trafficLight.getCoords().equals(current))
         {
             current.setX(current.getX() + direction.getXSpeed());
@@ -195,15 +196,18 @@ public class RoadMapImpl implements RoadMap {
     }
 
     @Override
-    public boolean carAt(Coords coords)
-    {
-        boolean result = false;
-        if (coords.getX() >= 0 && coords.getY() >= 0 && coords.getX() < gridSize && coords.getY() < gridSize ){
-            if (grid[coords.getX()][coords.getY()] == carChar) {
-                result = true;
-            }
-        }
-        return result;
+    public boolean carAt(Coords coords) {
+        return  
+            0 <= coords.getX() && coords.getX() < gridSize &&
+            0 <= coords.getX() && coords.getX() < gridSize &&
+            grid[coords.getX()][coords.getY()] == carChar;
+    }
+    
+    public boolean roadAt(Coords coords) {
+        return  
+            0 <= coords.getX() && coords.getX() < gridSize &&
+            0 <= coords.getX() && coords.getX() < gridSize &&
+            grid[coords.getX()][coords.getY()] == roadChar;
     }
 
     private char[][] copyGrid(char[][] grid)

@@ -47,11 +47,9 @@ public class LearningModuleImpl implements LearningModule
                 } else {
                     switches.add(t.clock());
                 }
-            } else if (t.getDelay() == 1){
+            } else {
                 //decrements counter and switches if necessary
                 switches.add(t.clock());
-            } else {
-                t.clock();
             }
         }
         return switches;
