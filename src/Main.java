@@ -56,7 +56,8 @@ public class Main
         // TODO: no longer matters how small i make my font,
         // this loop ain't gonna fit on my screen
         // or even robert's
-        for (int timeToRun = 0; timeToRun < runTime; ++timeToRun) {
+        int timeToRun = 0;
+        while (true) {
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
             List<Boolean> switchedLights;
@@ -108,17 +109,14 @@ public class Main
                 }
             }
             nextState.addCars(cars);
-            
-
-            
 
             // Updates q-values
             //calculate reward and state code for each traffic light
             for (TrafficLight light : trafficLights) {
                 rewards.add(
-                    learningModule.reward(nextState.stateCode(light))
+                    learningModule.reward2(nextState.stateCode2(light))
                 );
-                nextStates.add(nextState.stateCode(light));
+                nextStates.add(nextState.stateCode2(light));
             }
             //To learn we need to pass through - previous states, 
             //actions taken, rewards
@@ -138,6 +136,7 @@ public class Main
                     Thread.sleep(300);
                 } catch (Exception e) {}
             }
+            timeToRun++;
         }
     }
 }

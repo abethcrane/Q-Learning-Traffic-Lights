@@ -39,8 +39,13 @@ public interface RoadMap
 
     //Returns true if there is a road at the specified coord
     boolean roadAt(Coords coords);
-
+    
     //This is not a hashcode, a hashcode is a code returned by an object
     //to uniquely represent itself and does not take parameters
 	int stateCode(TrafficLight t);
+	
+	// A variant on the stateCode
+	// Instead of storing the closet car position for each road, it counts how many are stopped on each road 
+	int stateCode2(TrafficLight t);	
+	
 }

@@ -111,15 +111,6 @@ public class LearningModuleImpl implements LearningModule
 
     //Reward -1.0 if a car is stopped at a red light on either road, zero otherwise.
     public int reward(int stateCode) {
-        // work this out based on the cars array of the traffic light
-
-        // if the hash of the roadmap traffic light (irrelevant of action)
-        // starts at
-        //1st 0 = 4 digits
-       // 2nd 0  = fine
-        //1st and 2nd 0 =3 digits
-
-        // Also need to check if it's stopped at a red light, not just stopped
 
     	//__1__ = horizontal green
     	// 0____ = car at 0 on horizontal
@@ -149,6 +140,43 @@ public class LearningModuleImpl implements LearningModule
         return rewardNum;
     }
 
+    //Reward -1.0 if a car is stopped at a red light on either road, zero otherwise.
+    public int reward2(int stateCode) {
+
+    	//__1__ = horizontal green
+    	// 0____ = car at 0 on horizontal
+    	//_0___ = car at 0 on vertical
+    	// hence 0_0__ = car stopped at horizontal road
+    	// hence _01__ = car stopped at vertical road
+
+    	int rewardNum = 0;
+
+        // If it's 1 digit both roads have 0 cars stopped
+        if (stateCode / 10 == 0) {
+        	rewardNum = 0;
+        // If it's 2 digits horizontal road has 0 cars queued up
+        // Hence if light is red for vertical, we check how many are in the vertical position
+        } else if (stateCode/100 == 0) {
+        	if ((stateCode)%10 == 1) {
+        		rewardNum = -1 * (stateCode/10);
+        	}
+        // Else if the second digit is 0 there's a car at the vertical road
+        // Hence we check if the light is 1 (red for vertical)
+        } else {
+        	// If the traffic light is red for horizontal we add on how many cars are stopped horizontally
+        	if (stateCode%10 == 0) {
+        		rewardNum = -1 * (stateCode/100);
+        	}	
+        	// If traffic light is red for vertical we add on how many cars are stopped vertically
+        	if (stateCode%10 == 1) {
+        		rewardNum = -1 * ((stateCode/10)%10);
+        	}
+        }
+
+        return rewardNum;
+    }
+
+    
     public Action getAction (RoadMap r, TrafficLight t) {
         ActionImpl a;
 
