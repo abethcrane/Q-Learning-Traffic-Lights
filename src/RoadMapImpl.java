@@ -249,12 +249,16 @@ public class RoadMapImpl implements RoadMap {
     }
 
     @Override
-    public TrafficLight getClosestTrafficLight(Car car, List<TrafficLight> trafficLights)
-    {
-        //Iterate along road in direction of car, return traffic light first encountered or null
-       Coords coords = new Coords(car.getCoords().getX(), car.getCoords().getY());
-        while (!(coords.getX() < 0) && !(coords.getY() < 0) &&
-                !(coords.getX() >= 60) && !(coords.getY() >= 60)) {
+    public TrafficLight getClosestTrafficLight(
+            Car car, List<TrafficLight> trafficLights
+    ) {
+        //Iterate along road in direction of car, return traffic light first 
+        //encountered or null
+        Coords coords = new Coords(
+            car.getCoords().getX(), car.getCoords().getY());
+        while (coords.getX() >=0 && coords.getY() >= 0 &&
+                coords.getX() < 60 && coords.getY() < 60
+        ) {
             for (TrafficLight t : trafficLights) {
                 if (coords.equals(trafficLightCoords(car.getDirection(), t))) {
                     return t;

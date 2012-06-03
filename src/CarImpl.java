@@ -84,6 +84,6 @@ public class CarImpl implements Car
     @Override
     public boolean stopped()
     {
-        return position.getX() == 0 && position.getY() == 0;
+        return velocity.getXSpeed() == 0 && velocity.getYSpeed() == 0;
     }
 }

@@ -1,3 +1,8 @@
+2012-06-03 --:--:-- Gill <gmail gillemorris>
+	* CarImpl.java: stopped() now returns whether the car has zero
+	   velocity (rather than zero position).
+	* Main.java: now evaluates the success of the learning algorithm.
+
 2012-06-03 6:03: -- Nathan
     *updated to have 4 traffic lights. this required some reworking of
      how we update car velocities as we don't want to move a car across

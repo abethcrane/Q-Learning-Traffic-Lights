@@ -14,10 +14,10 @@ import utils.Coords;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main
-{
-    public static void main (String[] args)
-    {
+public class Main {
+    private static final int dim = 60;
+    private static final int mapWidth = dim, mapHeight = dim;
+    public static void main (String[] args) {
         //(do we need to take in any arguments? my thought is perhaps we
         //    should save the learned values to a file and pass that 
         //    file as an argument if we wish to resume from a previous 
@@ -27,10 +27,12 @@ public class Main
         //           is to make the poor thing learn everything again
         //           each time it runs before worrying about it. -- Gill
 
-    	int runTime = 1001000;
-        int quietTime = 1000000;
-        boolean graphicalOutput = true;
+    	int runTime = 100200;
+        int quietTime = 100000;
+        boolean graphicalOutput = false;
         boolean consoleOutput = false;
+        boolean output = graphicalOutput || consoleOutput;
+        int score = 0;
 
         //Initialise map, list of cars currently on map, and list of 
         //trafficlights
@@ -44,7 +46,7 @@ public class Main
         trafficLights.add(new TrafficLightImpl(new Coords(40, 40),false));
         double trafficDensityThreshold = 0.25;
         LearningModule learningModule = new LearningModuleImpl();
-        Viewer v = new Viewer();
+        Viewer v = graphicalOutput ? new Viewer() : null;
 
         //Basic logic for each time step
         // - change traffic lights if required - call a function from 
@@ -58,7 +60,7 @@ public class Main
         // TODO: no longer matters how small i make my font,
         // this loop ain't gonna fit on my screen
         // or even robert's
-        for (int timeToRun = 0; ; timeToRun++) {
+        for (int timeToRun = 0; timeToRun < runTime; timeToRun++) {
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
             List<Boolean> switchedLights;
@@ -82,9 +84,12 @@ public class Main
             //Move cars currently on map
             List<Car> carsToRemove = new ArrayList<Car>();
             for (Car car : cars) {
-                // FIXME: assumes map contains a single light 
-                // (will fix when we add lights)
-                car.updateVelocity(currentState.getClosestTrafficLight(car, trafficLights), currentState);
+                car.updateVelocity(
+                    currentState.getClosestTrafficLight(
+                        car, trafficLights
+                    ), 
+                    currentState
+                );
                 car.updatePosition();
                 if (car.hasLeftMap(map)) {
                      carsToRemove.add(car);
@@ -133,10 +138,17 @@ public class Main
                 if (consoleOutput) {
                     map.print(cars, trafficLights);
                 }
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {}
+                if (output) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (Exception e) {}
+                }
+                for (Car c : cars) {
+                    score += c.stopped() ? -1 : 0;
+                }
             }
         }
+        System.out.println("Finished with an overall score of " +(float)
+            score/(runTime-quietTime) + " (higher is better, 0 best)");
     }
 }

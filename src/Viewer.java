@@ -23,7 +23,7 @@ public class Viewer extends JFrame {
     private List<TrafficLight> l;
     private int init = 0;
 
-    private static final int u = 10;
+    private static final int u = 15;
     private static final int w = 3; // we require 2*w < u
     /* FIXME */ private static final int n = 60;
 
