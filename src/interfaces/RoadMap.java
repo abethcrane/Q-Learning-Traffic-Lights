@@ -48,6 +48,11 @@ public interface RoadMap
 	// Instead of storing the closet car position for each road, it counts how many are stopped on each road 
 	int stateCode2(TrafficLight t);
 
+	// A variant on the stateCode
+	// Instead of storing the closet car position for each road, it counts how many are stopped on each road
+	// And also if cars can move across a road
+	int stateCode3(TrafficLight t, List<Car> cars);	
+	
     //returns true if there is room for a car at p to cross the intersection in a direction
     //calculates by counting blank squares thirteen tiles from position
     boolean roomToCrossIntersection(Coords position, Velocity direction, TrafficLight l);

@@ -10,6 +10,9 @@ import interfaces.*;
 
 import java.util.*;
 
+import utils.Coords;
+import utils.Velocity;
+
 public class LearningModuleImpl implements LearningModule
 {
     // TODO:  MERGING
@@ -146,7 +149,7 @@ public class LearningModuleImpl implements LearningModule
         return rewardNum;
     }
 
-    //Reward -1.0 if a car is stopped at a red light on either road, zero otherwise.
+    //Reward -1*numCars stopped at a red light, + numCars queued up going through a greenlight
     public int reward2(int stateCode) {
 
     	//__1__ = horizontal green
@@ -155,7 +158,73 @@ public class LearningModuleImpl implements LearningModule
     	// hence 0_0__ = car stopped at horizontal road
     	// hence _01__ = car stopped at vertical road
 
+    	
     	int rewardNum = 0;
+        // If it's 1 digit both roads have 0 cars stopped
+        if (stateCode / 10 == 0) {
+        	rewardNum = 0;
+        // If it's 2 digits horizontal road has 0 cars queued up
+        // Hence if light is red for vertical, we check how many are in the vertical position
+        } else if (stateCode/100 == 0) {
+        	if ((stateCode)%10 == 1) {
+        		rewardNum = -1 * (stateCode/10);
+        	}
+        // Else if the second digit is 0 there's a car at the vertical road
+        // Hence we check if the light is 1 (red for vertical)
+        } else {
+        	// If the traffic light is red for horizontal we add on how many cars are stopped horizontally
+			// And positive how many are queued up vertically
+        	if (stateCode%10 == 0) {
+        		rewardNum = -1 * (stateCode/100);
+        		rewardNum += (stateCode/10)%10;
+        	}	
+        	// If traffic light is red for vertical we add on negative how many cars are stopped vertically
+        	// And positive how many are queued up horizontally
+        	if (stateCode%10 == 1) {
+        		rewardNum = -1 * ((stateCode/10)%10);
+        		rewardNum += stateCode/100;
+        	}
+        }
+        
+
+        return rewardNum;
+    }
+
+    //Reward -1*numCars stopped at a red light, + numCars queued up going through a greenlight
+    // However minus 20 if there's a car directly on the other side of the intersection (i.e. not letting our car move)
+    public int reward3(int stateCode) {
+
+    	//__1__ = horizontal green
+    	// 0____ = car at 0 on horizontal
+    	//_0___ = car at 0 on vertical
+    	// hence 0_0__ = car stopped at horizontal road
+    	// hence _01__ = car stopped at vertical road
+
+    	
+    	int rewardNum = 0;
+
+    	// work these out then mod by 1000%
+    	
+    	// if it's 4 digits then horizontally is bad to be horizontal (0____) 
+    	if (stateCode/1000 == 0) {
+    		// if light is currently 1 - green horizontal, and action is 0 = bad
+    		// if light is currently 0 - red horizontal, and action is 1 = bad
+    		if (stateCode%10 == 1) {
+    			rewardNum -= 10;
+    		}
+        	// if it's 3 digits it's bad to be either    		
+    	} else if (stateCode/100 == 0) {
+    		rewardNum -= 10;
+    		// if it's 5 digits with _0___ then it's bad to be vertical
+    	} else if ((stateCode/100)%10 == 0) {
+    		if (stateCode%10 == 0) {
+    			rewardNum -= 10;
+    		}
+    	}
+    	
+    	
+    	// Now we're working with 3 digits, like before
+    	stateCode %= 1000;
 
         // If it's 1 digit both roads have 0 cars stopped
         if (stateCode / 10 == 0) {
@@ -170,18 +239,24 @@ public class LearningModuleImpl implements LearningModule
         // Hence we check if the light is 1 (red for vertical)
         } else {
         	// If the traffic light is red for horizontal we add on how many cars are stopped horizontally
+			// And positive how many are queued up vertically
         	if (stateCode%10 == 0) {
         		rewardNum = -1 * (stateCode/100);
+        		rewardNum += (stateCode/10)%10;
         	}	
-        	// If traffic light is red for vertical we add on how many cars are stopped vertically
+        	// If traffic light is red for vertical we add on negative how many cars are stopped vertically
+        	// And positive how many are queued up horizontally
         	if (stateCode%10 == 1) {
         		rewardNum = -1 * ((stateCode/10)%10);
+        		rewardNum += stateCode/100;
         	}
         }
+        
 
         return rewardNum;
     }
-
+    
+    
     //naive implementation of reward where you are penalised for each stopped car
     public int reward3(List<Car> cars, TrafficLight light) {
         int count = 0;
