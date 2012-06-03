@@ -6,9 +6,7 @@
    Nathan Wilson
 */
 
-import interfaces.*;
 import java.util.*;
-import utils.*;
 
 public class LearningModuleImpl implements LearningModule {
     private static final int numCarSpaces = 9;

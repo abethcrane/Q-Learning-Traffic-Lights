@@ -1,9 +1,3 @@
-import interfaces.RoadMap;
-import interfaces.TrafficLight;
-import utils.*;
-
-import java.util.List;
-
 /*
 COMP9417 Machine Learning
 Major Project - Traffic Lights Reinforcement Learning

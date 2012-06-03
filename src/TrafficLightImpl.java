@@ -6,13 +6,7 @@ Gill Morris
 Nathan Wilson
  */
 
-import interfaces.TrafficLight;
-import utils.Coords;
-
-import java.util.ArrayList;
-import java.util.List;
-
-//Contains implementation of methods in interfaces.TrafficLight
+//Contains implementation of methods in TrafficLight
 public class TrafficLightImpl implements TrafficLight {
     private final int maxDelay = 3;
     private Coords coords;

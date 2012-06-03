@@ -6,9 +6,7 @@ Gill Morris
 Nathan Wilson
 */
 
-import utils.Coords;
-
-//interface for trafficLight object class - 
+//interface for trafficLight object class -
 //represents a traffic light, its position and current state
 public interface TrafficLight {
     //Changes direction of traffic light if getDelay() == 0

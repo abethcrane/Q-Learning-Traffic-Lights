@@ -1,6 +1,3 @@
-import interfaces.RoadMap;
-import interfaces.TrafficLight;
-
 import java.util.List;
 
 //Contains the logic for our reinforcement learning.

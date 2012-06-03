@@ -6,10 +6,6 @@ Gill Morris
 Nathan Wilson
 */
 
-import interfaces.TrafficLight;
-import utils.Coords;
-import utils.Velocity;
-
 import java.util.List;
 
 //Roadmap Interface - contains a representation of the road and intersections

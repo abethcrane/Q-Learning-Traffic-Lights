@@ -12,13 +12,13 @@ CLASSES = \
 	TrafficLight.java \
 	Coords.java \
 	Velocity.java \
-    ActionImpl.java \
-    CarImpl.java \
-    LearningModuleImpl.java \
+	ActionImpl.java \
+	CarImpl.java \
+	LearningModuleImpl.java \
 	RoadMapImpl.java \
 	TrafficLightImpl.java \
 	Viewer.java \
-    Main.java
+	Main.java
 
 default: classes
 

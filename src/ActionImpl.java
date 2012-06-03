@@ -5,11 +5,8 @@ Beth Crane
 Gill Morris
 Nathan Wilson
 */
-import interfaces.Action;
 
-import java.util.List;
-
-//Implementation of methods in interfaces.LearningModule interface
+//Implementation of methods in LearningModule interface
 public class ActionImpl implements Action {
     private boolean toSwitch;
 

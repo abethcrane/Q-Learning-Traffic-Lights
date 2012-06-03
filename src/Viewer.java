@@ -6,8 +6,6 @@ Gill Morris
 Nathan Wilson
 */
 
-import interfaces.*;
-import utils.*;
 import javax.swing.JFrame;
 import java.awt.Graphics;
 import java.awt.Color;

@@ -6,11 +6,6 @@ Gill Morris
 Nathan Wilson
  */
 
-import interfaces.Car;
-import interfaces.LearningModule;
-import interfaces.RoadMap;
-import interfaces.TrafficLight;
-import utils.Coords;
 import java.util.ArrayList;
 import java.util.List;
 
