@@ -18,15 +18,8 @@ public class Main {
     private static final int dim = 60;
     private static final int mapWidth = dim, mapHeight = dim;
     public static void main (String[] args) {
-        //(do we need to take in any arguments? my thought is perhaps we
-        //    should save the learned values to a file and pass that 
-        //    file as an argument if we wish to resume from a previous 
-        //    trial)
-        //
-        //         - probably. though I'd rather see how inefficient it
-        //           is to make the poor thing learn everything again
-        //           each time it runs before worrying about it. -- Gill
 
+        //Graphics and runtime parameters
     	int runTime = 100200;
         int quietTime = 100000;
         boolean graphicalOutput = true;
@@ -54,13 +47,10 @@ public class Main {
         // - move cars in their current direction by velocity (modify 
         //   velocity if necessary - using CarAI)
         // - spawn cars at extremities
-        // - Now that we have the new state, update the qvalue for the p
+        // - Now that we have the new state, update the qvalue for the
         //  previous s,a pair
-        
-        // TODO: no longer matters how small i make my font,
-        // this loop ain't gonna fit on my screen
-        // or even robert's
         for (int timeToRun = 0; timeToRun < runTime; timeToRun++) {
+            //Params required to learn
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
             List<Boolean> switchedLights;
@@ -68,17 +58,17 @@ public class Main {
             List<Integer> nextStates = new ArrayList<Integer>();
             List<Integer> rewards = new ArrayList<Integer>();
 
-            //Update the traffic lights - switch or stay
-            //Get integer representing state BEFORE cars are moved
-            //and lights are switched
+            //Save the states of each traffic light before updating
             for (TrafficLight light: trafficLights) {
                 states.add(currentState.stateCode(light));
             }
-            //returns a list of true/false that the lights were 
-            //switched for learning purposes
+
+            //Use the learned values to update the traffic lights
             switchedLights = learningModule.updateTrafficLights(
                     currentState, trafficLights, timeToRun
             );
+
+            //copy updated state of map
             RoadMap nextState = currentState.copyMap();
 
             //Move cars currently on map
@@ -88,7 +78,7 @@ public class Main {
                     currentState.getClosestTrafficLight(
                         car, trafficLights
                     ), 
-                    currentState
+                    nextState
                 );
                 car.updatePosition();
                 if (car.hasLeftMap(map)) {
@@ -103,10 +93,6 @@ public class Main {
                     Math.random() <= trafficDensityThreshold &&
                     !currentState.carAt(roadEntrance)
                 ) {
-                    // TODO: if currentState.carAt(roadEntrance) we
-                    // should probably model that there's a queue
-                    // outside the map and/or fail our traffic light
-                    // learner
                     Car c = new CarImpl(
                             new Coords(roadEntrance),
                             map.getStartingVelocity(roadEntrance)
@@ -120,12 +106,12 @@ public class Main {
             //calculate reward and state code for each traffic light
             for (TrafficLight light : trafficLights) {
                 rewards.add(
-                    learningModule.reward3(nextState.stateCode3(light, cars))
+                    learningModule.reward(nextState.stateCode(light))
                 );
-                nextStates.add(nextState.stateCode3(light, cars));
+                nextStates.add(nextState.stateCode(light));
             }
-            //To learn we need to pass through - previous states, 
-            //actions taken, rewards
+
+            //Learn on the new state and reward with reference to the previous state and action
             learningModule.learn(
                 states, switchedLights, rewards, nextStates, 
                 trafficLights

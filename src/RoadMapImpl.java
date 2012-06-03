@@ -94,15 +94,14 @@ public class RoadMapImpl implements RoadMap {
     /*
     1st - Num cars with velocity 0 on road 1
     2nd - Num cars with velocity 0 on road 2
-    3rd - light setting (ie 0-green, 1 red for one of the roads, 2 for amber) X
+    3rd - light setting (ie 0-green, 1 red for one of the roads)
+    //we don't want to include amber as a light setting because we do not learn when the light is amber
      */    
     public int stateCode(TrafficLight t) {
         int hash = 0;
 
         int lightSetting;
-        if (t.getDelay() != 0) {
-        	lightSetting = 2;
-        } else if (t.horizontalGreen()) {
+        if (t.horizontalGreen()) {
             lightSetting = 1;
         } else {
         	lightSetting = 0;
@@ -125,16 +124,15 @@ public class RoadMapImpl implements RoadMap {
         }
         int v1 = i;
         c = new Coords(t.getCoords()).right().down();
-        CarImpl curCar;
         // Road one we'll go vertically down
         
         for (i = 0; i < 9; i++) {
         	c.setY(c.getY()+1);    
-            if (!carAt(c)) {
+            if (carAt(c)) {
                 break;
             }
         }
-        int v2 = i-1;
+        int v2 = i;
         hash += 10*(Math.min(v1, v2));
 
         c = new Coords(t.getCoords()).left().down();

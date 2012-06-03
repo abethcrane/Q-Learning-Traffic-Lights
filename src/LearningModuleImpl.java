@@ -28,7 +28,7 @@ public class LearningModuleImpl implements LearningModule
 	private ActionImpl[] actions = new ActionImpl[numActions];
 	private float id = (float)-0.0;
 	private int seen;
-	private int actionPosition = 100000; // action is a___ in stateCode 2, in stateCode3 its a_____
+	private int actionPosition = 1000; // action is a___ in stateCode 2, in stateCode3 its a_____
 
 	LearningModuleImpl() {
 		actions[0] = new ActionImpl(false);
@@ -41,31 +41,20 @@ public class LearningModuleImpl implements LearningModule
 		List<Boolean> switches = new ArrayList<Boolean>();
 		// Less naive, using the optimal policy (i.e. best q-value)
 		for (TrafficLight t : trafficLights) {
+			boolean a = (t.getDelay() == 0 && getAction(r, t).action());
 
-			//if (timeRan < 10000) {
-			//	switches = updateTrafficLightsRandomly(r, trafficLights);
-			//} else {
-				boolean a = (t.getDelay() == 0 && getAction(r, t).action());
-
-				switches.add(a);
-				if (a) {
-					t.switchLight();
-				}
-				/*
-            if (t.getDelay() == 0) {
-                Action a = getAction(r, t);
-                switches.add(a.action());
-                if (a.action()) { // if we add more actions, change this
-                    t.switchLight();
-                }
-            } else {
-                //decrements counter and switches if necessary
-                //switches.add(t.getDelay() == 1);
-                switches.add(false);
+            //Add whether or not we are changing the light - note we do not add the action chosen,
+            // but whether the clock switches. this is because we wish to learn on the change in
+            // state which takes 3 clock cycles to happen after we make an action
+			switches.add(t.getDelay() == 1);
+            //If we change the light - do NOT update the clock
+            //changing the light resets the delay - if we delay and
+            // then immediately update clock then the delay is prematurely decremented
+			if (a) {
+				t.switchLight();
+			} else {
+                t.clock();
             }
-				 */
-		//	}
-			t.clock();
 		}
 		return switches;
 	}
@@ -103,8 +92,6 @@ public class LearningModuleImpl implements LearningModule
 				int reward = rewards.get(i);
 				Float qVal = qValues.get(state + actionPosition*action.actionInt());
 				if (qVal == null) {
-					System.out.println("this should never happen " + seen);
-					++seen;
 					qVal = (float)id;
 				}
 				//calculate new
