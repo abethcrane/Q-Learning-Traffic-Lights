@@ -19,7 +19,7 @@ public class Main {
         //early exit if no arguments
         Integer rewardFunction;
         Double trafficIntensity;
-        if (args.length != 2) {
+        if (args.length == 2) {
             rewardFunction = Integer.parseInt(args[0]);
             trafficIntensity = Double.parseDouble(args[1]);
         } else {

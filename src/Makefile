@@ -5,20 +5,20 @@ JC = javac
 	$(JC) $(JFLAGS) $*.java
 
 CLASSES = \
-	interfaces\Action.java \
-	interfaces\Car.java \
-	interfaces\LearningModule.java \
-	interfaces\RoadMap.java \
-	interfaces\TrafficLight.java \
-	utils\Coords.java \
-	utils\Velocity.java \
-        ActionImpl.java \
-        CarImpl.java \
-        LearningModuleImpl.java \
+	Action.java \
+	Car.java \
+	LearningModule.java \
+	RoadMap.java \
+	TrafficLight.java \
+	Coords.java \
+	Velocity.java \
+    ActionImpl.java \
+    CarImpl.java \
+    LearningModuleImpl.java \
 	RoadMapImpl.java \
 	TrafficLightImpl.java \
 	Viewer.java \
-        Main.java 
+    Main.java
 
 default: classes
 
