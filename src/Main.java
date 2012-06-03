@@ -32,7 +32,7 @@ public class Main {
         }
         
         //Graphics and runtime parameters
-    	int runTime = 50200;
+        int runTime = 1000000000;
         int quietTime = 50000;
         boolean graphicalOutput = true;
         boolean consoleOutput = false;
@@ -78,7 +78,8 @@ public class Main {
         // - spawn cars at extremities
         // - Now that we have the new state, update the qvalue for the
         //  previous s,a pair
-        for (int timeToRun = 0; timeToRun < runTime; timeToRun++) {
+        int timeRan = 0;
+        for (timeRan = 0; timeRan < runTime; timeRan++) {
             //Params required to learn
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
@@ -104,7 +105,7 @@ public class Main {
 
             //Use the learned values to update the traffic lights
             switchedLights = learningModule.updateTrafficLights(
-                    currentState, trafficLights, timeToRun
+                    currentState, trafficLights, timeRan
             );
 
             //copy updated state of map
@@ -181,7 +182,7 @@ public class Main {
                 trafficLights
             );
 
-            if (timeToRun >= quietTime) {
+            if (timeRan >= quietTime) {
                 if (graphicalOutput) {
                     v.view(map, cars, trafficLights);
                 }
@@ -200,7 +201,7 @@ public class Main {
         }
 
         System.out.println("Finished with an overall score of " +(float)
-                score/(runTime-quietTime) + " (higher is better, 0 best)");
+                score/(timeRan-quietTime) + " (higher is better, 0 best)");
         System.out.println("Total number of cars on the road: " + totalCars);
         System.out.println("Total number of time steps: " + iterations);
         System.out.println("Average number of cars stopped at any one time: " + ((float)totalCarsStopped/(float)iterations));
