@@ -41,7 +41,7 @@ public class Main {
         //Graphics and runtime parameters
         int runTime = 50200;
         int quietTime = 50000;
-        boolean graphicalOutput = false;
+        boolean graphicalOutput = true;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
         int score = 0;

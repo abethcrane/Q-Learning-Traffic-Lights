@@ -96,7 +96,7 @@ public class LearningModuleImpl implements LearningModule {
             Float qVal = qValues.get(
                     state + actionPosition*action.actionInt());
             if (qVal == null) {
-                qVal = (float)id;
+                qVal = id;
             }
 
             //calculate new
@@ -113,12 +113,12 @@ public class LearningModuleImpl implements LearningModule {
     public Float getMaxQValue (int state) {
         Float q1 = qValues.get(state + actionPosition);
         if (q1 == null) {
-            q1 = (float)id;
+            q1 = id;
         }
 
         Float q2 = qValues.get(state);
         if (q2 == null) {
-            q2 = (float)id;
+            q2 = id;
         }
 
         return Math.max(q1, q2);
