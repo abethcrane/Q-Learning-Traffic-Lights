@@ -14,10 +14,11 @@ public interface LearningModule
     List<Boolean> updateTrafficLights
         (
                 RoadMap mapWithCars,
-                List<TrafficLight> trafficLights
+                List<TrafficLight> trafficLights,
+                int timeRan
         );
 
-    List<Integer> updateTrafficLightsRandomly(RoadMap mapWithCars, List<TrafficLight> trafficLights);
+    List<Boolean> updateTrafficLightsRandomly(RoadMap mapWithCars, List<TrafficLight> trafficLights);
 
     //learning method
     void learn(List<Integer> pastStates, List<Boolean> switches, List<Integer> rewards, List<Integer> newStates, List<TrafficLight> lights);

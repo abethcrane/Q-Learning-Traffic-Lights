@@ -27,8 +27,8 @@ public class Main {
         //           is to make the poor thing learn everything again
         //           each time it runs before worrying about it. -- Gill
 
-    	int runTime = 1000200;
-        int quietTime = 1000000;
+    	int runTime = 100200;
+        int quietTime = 100000;
         boolean graphicalOutput = true;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
@@ -55,7 +55,7 @@ public class Main {
         //   velocity if necessary - using CarAI)
         // - spawn cars at extremities
         // - Now that we have the new state, update the qvalue for the p
-        //   revious s,a pair
+        //  previous s,a pair
         
         // TODO: no longer matters how small i make my font,
         // this loop ain't gonna fit on my screen
@@ -77,7 +77,7 @@ public class Main {
             //returns a list of true/false that the lights were 
             //switched for learning purposes
             switchedLights = learningModule.updateTrafficLights(
-                    currentState, trafficLights
+                    currentState, trafficLights, timeToRun
             );
             RoadMap nextState = currentState.copyMap();
 
@@ -120,9 +120,9 @@ public class Main {
             //calculate reward and state code for each traffic light
             for (TrafficLight light : trafficLights) {
                 rewards.add(
-                    learningModule.reward4(cars,light)
+                    learningModule.reward3(nextState.stateCode3(light, cars))
                 );
-                nextStates.add(nextState.stateCode2(light));
+                nextStates.add(nextState.stateCode3(light, cars));
             }
             //To learn we need to pass through - previous states, 
             //actions taken, rewards
