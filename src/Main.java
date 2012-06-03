@@ -11,14 +11,10 @@ import interfaces.LearningModule;
 import interfaces.RoadMap;
 import interfaces.TrafficLight;
 import utils.Coords;
-
-import javax.print.attribute.IntegerSyntax;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    private static final int dim = 60;
-    private static final int mapWidth = dim, mapHeight = dim;
     public static void main (String[] args) {
         //early exit if no arguments
         if (args.length != 2) {
@@ -33,8 +29,8 @@ public class Main {
         }
 
         //Graphics and runtime parameters
-    	int runTime = 100200;
-        int quietTime = 100000;
+    	int runTime = 50200;
+        int quietTime = 50000;
         boolean graphicalOutput = true;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
