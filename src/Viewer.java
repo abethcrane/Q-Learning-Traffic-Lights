@@ -6,10 +6,6 @@ Gill Morris
 Nathan Wilson
 */
 
-// Will probably have this thing implement an interface as soon as I
-// have time / know the syntax to do it. (Extending JFrame complicates
-// things.)
-
 import interfaces.*;
 import utils.*;
 import javax.swing.JFrame;
@@ -25,7 +21,7 @@ public class Viewer extends JFrame {
 
     private static final int u = 10;
     private static final int w = 3; // we require 2*w < u
-    /* FIXME */ private static final int n = 60;
+    private static final int n = 60;
 
     private static final Color backgroundColor = new Color(0x7e7e7e);
     private static final Color roadColor = new Color(0x212323);
@@ -82,7 +78,7 @@ public class Viewer extends JFrame {
             int dy = i.getDirection().getYSpeed();
             g.setColor(
                 dy == 0 ? Color.green :
-                dx == 0 ? Color.blue :
+                dx == 0 ? new Color(0x1793D1) :
                     error
             );
             int p = dx == 0 ? w : 1, q = dy == 0 ? w : 1;

@@ -4,7 +4,7 @@
    Beth Crane
    Gill Morris
    Nathan Wilson
-   */
+*/
 
 import interfaces.*;
 import java.util.*;
@@ -14,15 +14,15 @@ public class LearningModuleImpl implements LearningModule {
     private static final int numCarSpaces = 9;
     private static final int numActions = 2;
     private static final int numRoads = 2;
-    private static final int numTrafficLights = 2; // modify this
+    private static final int numTrafficLights = 2;
     private float epsilon = (float)0.1;
     private float gamma = (float)0.9;
-    private float alpha = (float)0.1;
+    private float alpha = (float)0.7;
     private Map<Integer, Float> qValues = new HashMap<Integer, Float>();
     private ActionImpl[] actions = new ActionImpl[numActions];
     private float id = (float)-0.0;
     private int actionPosition = 1000; // action is a___ in stateCode 2, 
-    // in stateCode3 its a_____
+                                       // in stateCode3 its a_____
 
     LearningModuleImpl(int actionPosition) {
         actions[0] = new ActionImpl(false);
@@ -96,7 +96,7 @@ public class LearningModuleImpl implements LearningModule {
             Float qVal = qValues.get(
                     state + actionPosition*action.actionInt());
             if (qVal == null) {
-                qVal = (float)id;
+                qVal = id;
             }
 
             //calculate new
@@ -113,12 +113,12 @@ public class LearningModuleImpl implements LearningModule {
     public Float getMaxQValue (int state) {
         Float q1 = qValues.get(state + actionPosition);
         if (q1 == null) {
-            q1 = (float)id;
+            q1 = id;
         }
 
         Float q2 = qValues.get(state);
         if (q2 == null) {
-            q2 = (float)id;
+            q2 = id;
         }
 
         return Math.max(q1, q2);

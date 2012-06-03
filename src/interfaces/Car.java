@@ -12,8 +12,7 @@ Beth Crane
 Gill Morris
 Nathan Wilson
 */
-public interface Car
-{
+public interface Car {
     //Updates the velocity of a car given whether the traffic light 
     //is immediately in front and is red
     void updateVelocity(TrafficLight trafficLight, RoadMap mapWithCars);

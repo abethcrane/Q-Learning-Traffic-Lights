@@ -13,14 +13,12 @@ Beth Crane
 Gill Morris
 Nathan Wilson
 */
-public class CarImpl implements Car 
-{
+public class CarImpl implements Car {
     private Coords position;
     private Velocity velocity;
     private Velocity direction; // desired velocity (if no light)
 
-    public CarImpl(Coords position, Velocity startingVelocity)
-    {
+    public CarImpl(Coords position, Velocity startingVelocity) {
         this.position = position;
         this.velocity = startingVelocity;
         this.direction = new Velocity(
@@ -28,48 +26,42 @@ public class CarImpl implements Car
     }
 
     @Override
-    public void updateVelocity(TrafficLight l, RoadMap m)
-    {
+    public void updateVelocity(TrafficLight l, RoadMap m) {
         boolean greenLight = 
-            l.getDelay() == 0 &&
-            l.horizontalGreen() == (direction.getYSpeed() == 0) &&
-            m.roomToCrossIntersection(position, direction, l);
+                l.getDelay() == 0 &&
+                l.horizontalGreen() == (direction.getYSpeed() == 0) &&
+                m.roomToCrossIntersection(position, direction, l);
         boolean stop =
-            !greenLight &&
-            m.nextNonCarSquareIsTrafficLight(position, direction, l);
+                !greenLight &&
+                m.nextNonCarSquareIsTrafficLight(position,direction,l);
         velocity.setXSpeed(stop ? 0 : direction.getXSpeed());
         velocity.setYSpeed(stop ? 0 : direction.getYSpeed());
     }
 
     @Override
-    public void updatePosition()
-    {
+    public void updatePosition() {
         position.setX(position.getX() + velocity.getXSpeed());
         position.setY(position.getY() + velocity.getYSpeed());
     }
 
     @Override
-    public Coords getCoords()
-    {
+    public Coords getCoords() {
          return position;
     }
 
-    public Velocity getDirection()
-    {
+    public Velocity getDirection() {
         return direction;
     }
 
     @Override
-    public boolean hasLeftMap(RoadMap map)
-    {
+    public boolean hasLeftMap(RoadMap map) {
         return
             position.getX() < 0 || position.getX() >= 60 ||
             position.getY() < 0 || position.getY() >= 60;
     }
 
     @Override
-    public char getChar()
-    {
+    public char getChar() {
         if (direction.getXSpeed() == -1) {
             return '^';
         }  else if (direction.getXSpeed() == 1) {
@@ -82,8 +74,7 @@ public class CarImpl implements Car
     }
 
     @Override
-    public boolean stopped()
-    {
+    public boolean stopped() {
         return velocity.getXSpeed() == 0 && velocity.getYSpeed() == 0;
     }
 }

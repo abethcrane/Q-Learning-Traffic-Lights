@@ -9,8 +9,7 @@ Nathan Wilson
 import java.util.List;
 
 //Contains the logic for our reinforcement learning.
-public interface LearningModule
-{
+public interface LearningModule {
     List<Boolean> updateTrafficLights
         (
                 RoadMap mapWithCars,
@@ -23,7 +22,6 @@ public interface LearningModule
 
     void setRLParam(float alpha, float gamma, float epsilon);
 
-    //learning method
     void learn
         (List<Integer> pastStates, List<Boolean> switches, 
         List<Integer> rewards, List<Integer> newStates, 
