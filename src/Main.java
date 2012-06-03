@@ -16,25 +16,25 @@ import java.util.List;
 
 public class Main {
     public static void main (String[] args) {
-        //early exit if no arguments
+        // Inputting arguments, or defaulting to reward 1 and intensity 0.25
         Integer rewardFunction;
         Double trafficIntensity;
-        if (args.length != 2) {
+        if (args.length == 2) {
             rewardFunction = Integer.parseInt(args[0]);
             trafficIntensity = Double.parseDouble(args[1]);
+            if (!(rewardFunction == 1 || rewardFunction == 2 || rewardFunction == 3) && 0 < trafficIntensity && trafficIntensity < 0.5) {
+            	rewardFunction = 1;
+                trafficIntensity = 0.25;
+            }
         } else {
             rewardFunction = 1;
             trafficIntensity = 0.25;
         }
-        if (!(rewardFunction == 1 || rewardFunction == 2 || rewardFunction == 3) && 0 < trafficIntensity && trafficIntensity < 0.5) {
-            System.out.println("Need two arguments x, y, where x is the reward function (1, 2, 3) and y is the traffic intensity (0..0.5)");
-            return;
-        }
-
+        
         //Graphics and runtime parameters
     	int runTime = 50200;
         int quietTime = 50000;
-        boolean graphicalOutput = false;
+        boolean graphicalOutput = true;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
         int score = 0;

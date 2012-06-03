@@ -82,7 +82,7 @@ public class Viewer extends JFrame {
             int dy = i.getDirection().getYSpeed();
             g.setColor(
                 dy == 0 ? Color.green :
-                dx == 0 ? Color.blue :
+                dx == 0 ? new Color(0x1793D1) :
                     error
             );
             int p = dx == 0 ? w : 1, q = dy == 0 ? w : 1;
