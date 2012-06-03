@@ -24,9 +24,10 @@ public class LearningModuleImpl implements LearningModule {
     private int actionPosition = 1000; // action is a___ in stateCode 2, 
     // in stateCode3 its a_____
 
-    LearningModuleImpl() {
+    LearningModuleImpl(int actionPosition) {
         actions[0] = new ActionImpl(false);
         actions[1] = new ActionImpl(true);
+        this.actionPosition = actionPosition;
     }
 
     public void setRLParam(float alpha, float gamma, float epsilon) {
@@ -298,7 +299,7 @@ public class LearningModuleImpl implements LearningModule {
         Action highestAction = new ActionImpl();
         for (int i = 0; i < numActions; i++) {
             a = actions[i];
-            Float q = qValues.get(r.stateCode(t) + 1000*i);
+            Float q = qValues.get(r.stateCode(t) + actionPosition*i);
             if (q == null) {
                 q = (float)0;
             }

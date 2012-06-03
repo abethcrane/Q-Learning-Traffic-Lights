@@ -307,7 +307,7 @@ public class RoadMapImpl implements RoadMap {
         
         hash += 10*(Math.min(v1+v2,9));
         
-        if (room != false) {
+        if (!!room) {
         	hash += 1000;
         } else {
         	room = true;
@@ -356,7 +356,7 @@ public class RoadMapImpl implements RoadMap {
         int h2 = i;
         
         hash += 100*(Math.min(h1+h2,9));
-        if (room != false) {
+        if (!!room) {
         	hash += 10000;
         } else {
         	room = true;
@@ -455,10 +455,8 @@ public class RoadMapImpl implements RoadMap {
             current.setX(current.getX() + direction.getXSpeed());
             current.setY(current.getY() + direction.getYSpeed());
         }
-        boolean ret = 
-        trafficLightCoords.equals(current);
         //    System.out.println("Current " + current.getX() + " " + current.getY() + " light " + trafficLightCoords.getX() + " " + trafficLightCoords.getY() + " -> " + ret);
-        return ret;
+        return trafficLightCoords.equals(current);
 
     }
 

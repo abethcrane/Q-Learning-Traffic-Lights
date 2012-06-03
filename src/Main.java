@@ -52,7 +52,19 @@ public class Main {
         trafficLights.add(new TrafficLightImpl(new Coords(20, 40),true));
         trafficLights.add(new TrafficLightImpl(new Coords(40, 20),true));
         trafficLights.add(new TrafficLightImpl(new Coords(40, 40),false));
-        LearningModule learningModule = new LearningModuleImpl();
+
+        //Set actionposition based on arg1
+        int actionPosition = 1000;
+        switch (rewardFunction) {
+            case 1:
+                actionPosition = 1000;
+                break;
+            case 2:
+            case 3:
+                actionPosition = 100000;
+                break;
+            }
+        LearningModule learningModule = new LearningModuleImpl(actionPosition);
         Viewer v = graphicalOutput ? new Viewer() : null;
 
         //Basic logic for each time step
