@@ -222,18 +222,17 @@ public class LearningModuleImpl implements LearningModule
     		}
     	}
     	
-    	
     	// Now we're working with 3 digits, like before
     	stateCode %= 1000;
 
         // If it's 1 digit both roads have 0 cars stopped
         if (stateCode / 10 == 0) {
-        	rewardNum = 0;
+        	rewardNum += 0;
         // If it's 2 digits horizontal road has 0 cars queued up
         // Hence if light is red for vertical, we check how many are in the vertical position
         } else if (stateCode/100 == 0) {
         	if ((stateCode)%10 == 1) {
-        		rewardNum = -1 * (stateCode/10);
+        		rewardNum += -1 * (stateCode/10);
         	}
         // Else if the second digit is 0 there's a car at the vertical road
         // Hence we check if the light is 1 (red for vertical)
@@ -241,24 +240,23 @@ public class LearningModuleImpl implements LearningModule
         	// If the traffic light is red for horizontal we add on how many cars are stopped horizontally
 			// And positive how many are queued up vertically
         	if (stateCode%10 == 0) {
-        		rewardNum = -1 * (stateCode/100);
-        		rewardNum += (stateCode/10)%10;
+        		rewardNum += -1 * (stateCode/100);
+        		//rewardNum += (stateCode/10)%10;
         	}	
         	// If traffic light is red for vertical we add on negative how many cars are stopped vertically
         	// And positive how many are queued up horizontally
         	if (stateCode%10 == 1) {
-        		rewardNum = -1 * ((stateCode/10)%10);
-        		rewardNum += stateCode/100;
+        		rewardNum += -1 * ((stateCode/10)%10);
+        		//rewardNum += stateCode/100;
         	}
         }
-        
-
+       
         return rewardNum;
     }
     
     
     //naive implementation of reward where you are penalised for each stopped car
-    public int reward3(List<Car> cars, TrafficLight light) {
+    public int reward4(List<Car> cars, TrafficLight light) {
         int count = 0;
         for (Car car : cars) {
             if (car.stopped())
@@ -290,7 +288,7 @@ public class LearningModuleImpl implements LearningModule
             // however, this temporarily gets us around the problem of
             // q(true) = 0 (always) and q(false) being generally in 
             // [-30, -5]
-            if (q < highestQ) {
+            if (q > highestQ) {
                 highestQ = q;
                 highestAction = a;
             }

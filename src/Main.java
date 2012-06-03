@@ -29,7 +29,7 @@ public class Main {
 
     	int runTime = 1000200;
         int quietTime = 1000000;
-        boolean graphicalOutput = false;
+        boolean graphicalOutput = true;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
         int score = 0;
@@ -120,9 +120,9 @@ public class Main {
             //calculate reward and state code for each traffic light
             for (TrafficLight light : trafficLights) {
                 rewards.add(
-                    learningModule.reward3(nextState.stateCode3(light, cars))
+                    learningModule.reward4(cars,light)
                 );
-                nextStates.add(nextState.stateCode3(light, cars));
+                nextStates.add(nextState.stateCode2(light));
             }
             //To learn we need to pass through - previous states, 
             //actions taken, rewards

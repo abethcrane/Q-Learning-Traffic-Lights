@@ -23,7 +23,7 @@ public interface LearningModule
     void learn(List<Integer> pastStates, List<Boolean> switches, List<Integer> rewards, List<Integer> newStates, List<TrafficLight> lights);
 
     int reward(int stateCode);
-
     int reward2(int stateCode);
     int reward3(int stateCode);
+    int reward4(List<Car> cars, TrafficLight light);
 }
