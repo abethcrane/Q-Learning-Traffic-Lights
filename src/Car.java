@@ -1,5 +1,4 @@
-package interfaces;
-
+import interfaces.RoadMap;
 import interfaces.TrafficLight;
 import utils.*;
 
