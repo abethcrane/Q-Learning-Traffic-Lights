@@ -39,7 +39,7 @@ public class Main {
         }
         
         //Graphics and runtime parameters
-    	int runTime = 50200;
+        int runTime = 50200;
         int quietTime = 50000;
         boolean graphicalOutput = false;
         boolean consoleOutput = false;
@@ -89,7 +89,8 @@ public class Main {
         // - spawn cars at extremities
         // - Now that we have the new state, update the qvalue for the
         //  previous s,a pair
-        for (int timeToRun = 0; timeToRun < runTime; timeToRun++) {
+        int timeRan = 0;
+        for (timeRan = 0; timeRan < runTime; timeRan++) {
             //Params required to learn
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
@@ -115,7 +116,7 @@ public class Main {
 
             //Use the learned values to update the traffic lights
             switchedLights = learningModule.updateTrafficLights(
-                    currentState, trafficLights, timeToRun
+                    currentState, trafficLights, timeRan
             );
 
             //copy updated state of map
@@ -196,7 +197,7 @@ public class Main {
                 trafficLights
             );
 
-            if (timeToRun >= quietTime) {
+            if (timeRan >= quietTime) {
                 if (graphicalOutput) {
                     v.view(map, cars, trafficLights);
                 }

@@ -17,7 +17,7 @@ public class LearningModuleImpl implements LearningModule {
     private static final int numTrafficLights = 2;
     private float epsilon = (float)0.1;
     private float gamma = (float)0.9;
-    private float alpha = (float)0.1;
+    private float alpha = (float)0.7;
     private Map<Integer, Float> qValues = new HashMap<Integer, Float>();
     private ActionImpl[] actions = new ActionImpl[numActions];
     private float id = (float)-0.0;
