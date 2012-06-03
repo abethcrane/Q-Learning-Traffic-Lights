@@ -17,12 +17,15 @@ import java.util.List;
 public class Main {
     public static void main (String[] args) {
         //early exit if no arguments
+        Integer rewardFunction;
+        Double trafficIntensity;
         if (args.length != 2) {
-            System.out.println("Need two arguments x, y, where x is the reward function (1, 2, 3) and y is the traffic intensity (0..0.5)");
-            return;
+            rewardFunction = Integer.parseInt(args[0]);
+            trafficIntensity = Double.parseDouble(args[1]);
+        } else {
+            rewardFunction = 1;
+            trafficIntensity = 0.25;
         }
-        Integer rewardFunction = Integer.parseInt(args[0]);
-        Double trafficIntensity = Double.parseDouble(args[1]);
         if (!(rewardFunction == 1 || rewardFunction == 2 || rewardFunction == 3) && 0 < trafficIntensity && trafficIntensity < 0.5) {
             System.out.println("Need two arguments x, y, where x is the reward function (1, 2, 3) and y is the traffic intensity (0..0.5)");
             return;
@@ -31,7 +34,7 @@ public class Main {
         //Graphics and runtime parameters
     	int runTime = 50200;
         int quietTime = 50000;
-        boolean graphicalOutput = true;
+        boolean graphicalOutput = false;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
         int score = 0;
@@ -161,11 +164,11 @@ public class Main {
                         nextStates.add(nextState.stateCode(light));
                         break;
                     case 2:
-                        rewards.add(learningModule.reward2(nextState.stateCode(light)));
+                        rewards.add(learningModule.reward2(nextState.stateCode2(light)));
                         nextStates.add(nextState.stateCode2(light));
                         break;
                     case 3:
-                        rewards.add(learningModule.reward3(nextState.stateCode(light)));
+                        rewards.add(learningModule.reward3(nextState.stateCode3(light, cars)));
                         nextStates.add(nextState.stateCode3(light, cars));
                         break;
                 }
@@ -188,7 +191,7 @@ public class Main {
                 if (output) {
                     try {
                         Thread.sleep(500);
-                    } catch (Exception e) {}
+                    } catch (Exception ignored) {}
                 }
                 for (Car c : cars) {
                     score += c.stopped() ? -1 : 0;

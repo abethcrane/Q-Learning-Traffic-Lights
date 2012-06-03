@@ -175,9 +175,7 @@ public class RoadMapImpl implements RoadMap {
         int hash = 0;
 
         int lightSetting;
-        if (t.getDelay() != 0) {
-        	lightSetting = 2;
-        } else if (t.horizontalGreen()) {
+        if (t.horizontalGreen()) {
             lightSetting = 1;
         } else {
         	lightSetting = 0;
@@ -217,16 +215,14 @@ public class RoadMapImpl implements RoadMap {
         c.setX(c.getX()-1);
         while(carAt(c)) {
         	i++;
-            c.setY(c.getY()-1);
             c.setX(c.getX()-1);
         }
         int h1 = i;
         
         // Road two we'll go horizontally right
-        i = 0;
         c = new Coords(t.getCoords()).right().up();
         c.setX(c.getX()+1);
-        for (i = 0; i < 9; i++) {
+        while(carAt(c)) {
             i++;
             c.setX(c.getX()+1);
         }
