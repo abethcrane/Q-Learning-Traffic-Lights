@@ -25,5 +25,5 @@ public interface LearningModule
     int reward(int stateCode);
 
     int reward2(int stateCode);
-    int reward3(List<Car> cars, TrafficLight light);
+    int reward3(int stateCode);
 }

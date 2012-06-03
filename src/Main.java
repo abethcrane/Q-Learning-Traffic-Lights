@@ -28,7 +28,7 @@ public class Main
         //           each time it runs before worrying about it. -- Gill
 
     	int runTime = 1001000;
-        int quietTime = 1000000;
+        int quietTime = 1000;
         boolean graphicalOutput = true;
         boolean consoleOutput = false;
 
@@ -115,9 +115,9 @@ public class Main
             //calculate reward and state code for each traffic light
             for (TrafficLight light : trafficLights) {
                 rewards.add(
-                    learningModule.reward2(nextState.stateCode2(light))
+                    learningModule.reward3(nextState.stateCode3(light, cars))
                 );
-                nextStates.add(nextState.stateCode2(light));
+                nextStates.add(nextState.stateCode3(light, cars));
             }
             //To learn we need to pass through - previous states, 
             //actions taken, rewards
