@@ -21,15 +21,15 @@ import java.util.List;
 //implements methods from interfaces.RoadMap
 public class RoadMapImpl implements RoadMap {
     public final int gridSize = 60;
-    private final Coords[] defaultEntrances =
-        {new Coords(0, 21),
+    private final Coords[] defaultEntrances = {
+                new Coords(0, 21),
                 new Coords(0, 41),
                 new Coords(59, 19),
                 new Coords(59, 39),
                 new Coords(19, 0),
-                new Coords(39, 0),
                 new Coords(21, 59),
-                new Coords(41, 59),
+                new Coords(39, 0),
+                new Coords(41, 59)
         };
     private final char carChar = 'C';
     private final int roadChar = ' ';
@@ -41,12 +41,12 @@ public class RoadMapImpl implements RoadMap {
         grid = new char[gridSize][gridSize];
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                grid[i][j] = 'x';
+                grid[j][i] = 'x';
                 for (Coords k : roadEntrances) {
                     if ((0 < i && i < gridSize-1 && i == k.getX()) || 
                         (0 < j && j < gridSize-1 && j == k.getY()))
                     {
-                        grid[i][j] = roadChar;
+                        grid[j][i] = roadChar;
                     }
                 }
             }

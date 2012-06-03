@@ -1,3 +1,11 @@
+2012-06-03 20:37:51 Gill <gmail gillemorris>
+	* Main.java: minor changes; can pass RL parameters in as arguments
+	* interfaces/LearningModule.java: ""
+	* LearningModuleImpl.java: "". Also reformatted the code and some
+	    logic here and there. While some design aspects remain
+	    questionable I change it further due to time constraints.
+	    Unless something is suggested.
+
 2012-06-03 --:--:-- Gill <gmail gillemorris>
 	* CarImpl.java: stopped() now returns whether the car has zero
 	   velocity (rather than zero position).

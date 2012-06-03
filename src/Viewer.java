@@ -106,7 +106,6 @@ public class Viewer extends JFrame {
             g.fillRect(u*x, u*y+w, w, u-2*w);
             g.fillRect(u*(x+1)-w, u*y+w, w, u-2*w);
         }
-
     }
 
     public void paint(Graphics g) {

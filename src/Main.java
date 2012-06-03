@@ -18,11 +18,10 @@ public class Main {
     private static final int dim = 60;
     private static final int mapWidth = dim, mapHeight = dim;
     public static void main (String[] args) {
-
         //Graphics and runtime parameters
-    	int runTime = 100200;
-        int quietTime = 100000;
-        boolean graphicalOutput = true;
+    	int runTime = 50200;
+        int quietTime = 50000;
+        boolean graphicalOutput = false;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
         int score = 0;
@@ -40,6 +39,14 @@ public class Main {
         double trafficDensityThreshold = 0.25;
         LearningModule learningModule = new LearningModuleImpl();
         Viewer v = graphicalOutput ? new Viewer() : null;
+        if (args.length == 3) try {
+            float alpha = Float.parseFloat(args[0]);
+            float gamma = Float.parseFloat(args[1]);
+            float epsilon = Float.parseFloat(args[2]);
+            learningModule.setRLParam(alpha, gamma, epsilon);
+        } catch (Exception e) {
+            System.err.println("Bad arguments - using default values.");
+        }
 
         //Basic logic for each time step
         // - change traffic lights if required - call a function from 
@@ -134,7 +141,6 @@ public class Main {
                 }
             }
         }
-        System.out.println("Finished with an overall score of " +(float)
-            score/(runTime-quietTime) + " (higher is better, 0 best)");
+        System.out.println((float)score/(runTime-quietTime));
     }
 }
