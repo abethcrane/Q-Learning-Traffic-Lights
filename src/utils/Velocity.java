@@ -9,35 +9,28 @@ Nathan Wilson
  */
 
 //Utility class to represent the x and y velocities of an object.
-public class Velocity
-{
+public class Velocity {
     private int x;
     private int y;
 
-    public Velocity(int xSpeed, int ySpeed)
-    {
+    public Velocity(int xSpeed, int ySpeed) {
         this.x = xSpeed;
         this.y = ySpeed;
     }
 
-    public int getXSpeed()
-    {
+    public int getXSpeed() {
         return x;
     }
 
-    public int getYSpeed()
-    {
+    public int getYSpeed() {
         return y;
     }
 
-    public void setXSpeed(int xSpeed)
-    {
+    public void setXSpeed(int xSpeed) {
         x = xSpeed;
     }
 
-    public void setYSpeed(int ySpeed)
-    {
+    public void setYSpeed(int ySpeed) {
         y = ySpeed;
     }
-
 }

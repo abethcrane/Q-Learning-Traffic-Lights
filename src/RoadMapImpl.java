@@ -95,7 +95,8 @@ public class RoadMapImpl implements RoadMap {
     1st - Num cars with velocity 0 on road 1
     2nd - Num cars with velocity 0 on road 2
     3rd - light setting (ie 0-green, 1 red for one of the roads)
-    //we don't want to include amber as a light setting because we do not learn when the light is amber
+    //we don't want to include amber as a light setting because 
+    //we do not learn when the light is amber
      */    
     public int stateCode(TrafficLight t) {
         int hash = 0;
@@ -168,7 +169,8 @@ public class RoadMapImpl implements RoadMap {
     //        (0-8, 9 if no cars) X
     //  4th - closest car position from intersection for road 2 
     //        (0-8, 9 if no cars X
-    //  5th - light setting (ie 0-green, 1 red for one of the roads, 2 for amber)
+    //  5th - light setting (ie 0-green, 
+    //        1 red for one of the roads, 2 for amber)
     // Needs to take in traffic light so it can tell which one to work
     // the things out for
     public int stateCode2(TrafficLight t) {
@@ -267,7 +269,8 @@ public class RoadMapImpl implements RoadMap {
         if (carAt(c)) {
         	for (Car car: cars) {
         		if (car.getCoords() == c) {
-        			if (!roomToCrossIntersection(c, car.getDirection(), t)) {
+        			if (!roomToCrossIntersection(
+                            c, car.getDirection(), t)) {
                     	room = false;
                     }
         			break;
@@ -287,7 +290,8 @@ public class RoadMapImpl implements RoadMap {
         if (carAt(c)) {
         	for (Car car: cars) {
         		if (car.getCoords() == c) {
-        			if (!roomToCrossIntersection(c, car.getDirection(), t)) {
+        			if (!roomToCrossIntersection(
+                            c, car.getDirection(), t)) {
                     	room = false;
                     }
         			break;
@@ -317,7 +321,8 @@ public class RoadMapImpl implements RoadMap {
         if (carAt(c)) {
         	for (Car car: cars) {
         		if (car.getCoords() == c) {
-        			if (!roomToCrossIntersection(c, car.getDirection(), t)) {
+        			if (!roomToCrossIntersection(
+                            c, car.getDirection(), t)) {
                     	room = false;
                     }
         			break;
@@ -338,7 +343,8 @@ public class RoadMapImpl implements RoadMap {
         if (carAt(c)) {
         	for (Car car: cars) {
         		if (car.getCoords() == c) {
-        			if (!roomToCrossIntersection(c, car.getDirection(), t)) {
+        			if (!roomToCrossIntersection(
+                            c, car.getDirection(), t)) {
                     	room = false;
                     }
         			break;
@@ -362,13 +368,15 @@ public class RoadMapImpl implements RoadMap {
     
     
     @Override
-    public boolean roomToCrossIntersection(Coords position, Velocity direction, TrafficLight l)
-    {
+    public boolean roomToCrossIntersection(
+            Coords position, Velocity direction, TrafficLight l) {
         //set coords for start of intersection
         Coords trafficLightCoords = trafficLightCoords(direction, l);
-        //iterate for thirteen squares from start of intersection, counting blanks
+        //iterate for thirteen squares from start of 
+        //intersection, counting blanks
         int blankRoadTiles = 0;
-        Coords current = new Coords(trafficLightCoords.getX(), trafficLightCoords.getY());
+        Coords current = new Coords(
+                trafficLightCoords.getX(), trafficLightCoords.getY());
         for (int i = 0; i < 20; i++) {
             if (!carAt(current)) {
                 blankRoadTiles++;
@@ -384,15 +392,16 @@ public class RoadMapImpl implements RoadMap {
     public TrafficLight getClosestTrafficLight(
             Car car, List<TrafficLight> trafficLights
     ) {
-        //Iterate along road in direction of car, return traffic light first 
-        //encountered or null
+        //Iterate along road in direction of car, return
+        //traffic light first encountered or null
         Coords coords = new Coords(
             car.getCoords().getX(), car.getCoords().getY());
         while (coords.getX() >=0 && coords.getY() >= 0 &&
                 coords.getX() < 60 && coords.getY() < 60
         ) {
             for (TrafficLight t : trafficLights) {
-                if (coords.equals(trafficLightCoords(car.getDirection(), t))) {
+                if (coords.equals(
+                        trafficLightCoords(car.getDirection(), t))) {
                     return t;
                 }
             }
@@ -433,27 +442,22 @@ public class RoadMapImpl implements RoadMap {
     public boolean nextNonCarSquareIsTrafficLight(
             Coords start, 
             Velocity direction, 
-            TrafficLight trafficLight
-    ) {
+            TrafficLight trafficLight) {
         Coords current = new Coords(start.getX(), start.getY());
         current.setX(current.getX() + direction.getXSpeed());
         current.setY(current.getY() + direction.getYSpeed());
         //need different traffic light coords depending on direction
-        Coords trafficLightCoords = trafficLightCoords(direction, trafficLight);
+        Coords trafficLightCoords = 
+                trafficLightCoords(direction, trafficLight);
 
         while (current.getX() < gridSize && current.getX() >= 0 &&
                 current.getY() < gridSize && current.getY() >= 0 &&
                 carAt(current) &&
-                //(grid[current.getY()][current.getX()] != roadChar) &&
-                !trafficLightCoords.equals(current))
-        {
-            //System.out.println("Current " + current.getX() + " " + current.getY());
+                !trafficLightCoords.equals(current)) {
             current.setX(current.getX() + direction.getXSpeed());
             current.setY(current.getY() + direction.getYSpeed());
         }
-        //    System.out.println("Current " + current.getX() + " " + current.getY() + " light " + trafficLightCoords.getX() + " " + trafficLightCoords.getY() + " -> " + ret);
         return trafficLightCoords.equals(current);
-
     }
 
     @Override
@@ -484,7 +488,8 @@ public class RoadMapImpl implements RoadMap {
         return newGrid;
     }
 
-    private Coords trafficLightCoords(Velocity direction, TrafficLight trafficLight) {
+    private Coords trafficLightCoords(Velocity direction, 
+            TrafficLight trafficLight) {
         Coords trafficLightCoords = new Coords(0,0);
         if (direction.getXSpeed() == 0) {
             if (direction.getYSpeed() == 1) {

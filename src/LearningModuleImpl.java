@@ -4,7 +4,7 @@
    Beth Crane
    Gill Morris
    Nathan Wilson
-   */
+*/
 
 import interfaces.*;
 import java.util.*;
@@ -14,7 +14,7 @@ public class LearningModuleImpl implements LearningModule {
     private static final int numCarSpaces = 9;
     private static final int numActions = 2;
     private static final int numRoads = 2;
-    private static final int numTrafficLights = 2; // modify this
+    private static final int numTrafficLights = 2;
     private float epsilon = (float)0.1;
     private float gamma = (float)0.9;
     private float alpha = (float)0.1;
@@ -22,7 +22,7 @@ public class LearningModuleImpl implements LearningModule {
     private ActionImpl[] actions = new ActionImpl[numActions];
     private float id = (float)-0.0;
     private int actionPosition = 1000; // action is a___ in stateCode 2, 
-    // in stateCode3 its a_____
+                                       // in stateCode3 its a_____
 
     LearningModuleImpl(int actionPosition) {
         actions[0] = new ActionImpl(false);

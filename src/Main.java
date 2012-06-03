@@ -16,25 +16,32 @@ import java.util.List;
 
 public class Main {
     public static void main (String[] args) {
-        // Inputting arguments, or defaulting to reward 1 and intensity 0.25
+        // Inputting arguments, or defaulting to 
+        // reward 1 and intensity 0.25
         Integer rewardFunction;
         Double trafficIntensity;
+        int defaultRewardFunction = 1;
+        double defaultTrafficIntensity = 0.25;
         if (args.length == 2) {
-            rewardFunction = Integer.parseInt(args[0]);
-            trafficIntensity = Double.parseDouble(args[1]);
-            if (!(rewardFunction == 1 || rewardFunction == 2 || rewardFunction == 3) && 0 < trafficIntensity && trafficIntensity < 0.5) {
-            	rewardFunction = 1;
-                trafficIntensity = 0.25;
+            try {
+                rewardFunction = Integer.parseInt(args[0]);
+                trafficIntensity = Double.parseDouble(args[1]);
+            } catch (Exception e) {
+                rewardFunction = defaultRewardFunction;
+                trafficIntensity = defaultTrafficIntensity;
+                System.err.println("Defaulting to " +
+                        "reward " + defaultRewardFunction +
+                        " intensity " + defaultTrafficIntensity);
             }
         } else {
-            rewardFunction = 1;
-            trafficIntensity = 0.25;
+            rewardFunction = defaultRewardFunction;
+            trafficIntensity = defaultTrafficIntensity;
         }
         
         //Graphics and runtime parameters
     	int runTime = 50200;
         int quietTime = 50000;
-        boolean graphicalOutput = true;
+        boolean graphicalOutput = false;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
         int score = 0;
@@ -51,10 +58,14 @@ public class Main {
         List<Car> cars = new ArrayList<Car>();
         List<TrafficLight> trafficLights = 
                 new ArrayList<TrafficLight>();
-        trafficLights.add(new TrafficLightImpl(new Coords(20, 20),false));
-        trafficLights.add(new TrafficLightImpl(new Coords(20, 40),true));
-        trafficLights.add(new TrafficLightImpl(new Coords(40, 20),true));
-        trafficLights.add(new TrafficLightImpl(new Coords(40, 40),false));
+        trafficLights.add(
+                new TrafficLightImpl(new Coords(20, 20),false));
+        trafficLights.add(
+                new TrafficLightImpl(new Coords(20, 40),true));
+        trafficLights.add(
+                new TrafficLightImpl(new Coords(40, 20),true));
+        trafficLights.add(
+                new TrafficLightImpl(new Coords(40, 40),false));
 
         //Set actionposition based on arg1
         int actionPosition = 1000;
@@ -160,22 +171,26 @@ public class Main {
             for (TrafficLight light : trafficLights) {
                 switch (rewardFunction) {
                     case 1:
-                        rewards.add(learningModule.reward(nextState.stateCode(light)));
+                        rewards.add(learningModule.reward(
+                                nextState.stateCode(light)));
                         nextStates.add(nextState.stateCode(light));
                         break;
                     case 2:
-                        rewards.add(learningModule.reward2(nextState.stateCode2(light)));
+                        rewards.add(learningModule.reward2(
+                                nextState.stateCode2(light)));
                         nextStates.add(nextState.stateCode2(light));
                         break;
                     case 3:
-                        rewards.add(learningModule.reward3(nextState.stateCode3(light, cars)));
+                        rewards.add(learningModule.reward3(
+                                nextState.stateCode3(light, cars)));
                         nextStates.add(nextState.stateCode3(light, cars));
                         break;
                 }
 
             }
 
-            //Learn on the new state and reward with reference to the previous state and action
+            //Learn on the new state and reward with reference to 
+            //the previous state and action
             learningModule.learn(
                 states, switchedLights, rewards, nextStates, 
                 trafficLights
@@ -199,11 +214,21 @@ public class Main {
             }
         }
 
-        System.out.println("Finished with an overall score of " +(float)
-                score/(runTime-quietTime) + " (higher is better, 0 best)");
-        System.out.println("Total number of cars on the road: " + totalCars);
-        System.out.println("Total number of time steps: " + iterations);
-        System.out.println("Average number of cars stopped at any one time: " + ((float)totalCarsStopped/(float)iterations));
-        System.out.println("Maximum number of cars stopped at any one time: " + maxCarsStopped);
+        System.out.println(
+                "Finished with an overall score of " +
+                (float) score/(runTime-quietTime) + 
+                " (higher is better, 0 best)");
+        System.out.println(
+                "Total number of cars on the road: " + 
+                totalCars);
+        System.out.println(
+                "Total number of time steps: " + 
+                iterations);
+        System.out.println(
+                "Average number of cars stopped at any one time: " + 
+                ((float)totalCarsStopped/(float)iterations));
+        System.out.println(
+                "Maximum number of cars stopped at any one time: " + 
+                maxCarsStopped);
     }
 }

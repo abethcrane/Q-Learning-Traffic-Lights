@@ -16,61 +16,50 @@ public class Coords extends Object {
     private int x;
     private int y;
 
-    public Coords(int x, int y)
-    {
+    public Coords(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public Coords(Coords coords)
-    {
+    public Coords(Coords coords) {
         this.x = coords.getX();
         this.y = coords.getY();
     }
 
-    public int getX()
-    {
+    public int getX() {
         return x;
     }
 
-    public int getY()
-    {
+    public int getY() {
         return y;
     }
 
-    public void setX(int x)
-    {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public void setY(int y)
-    {
+    public void setY(int y) {
         this.y = y;
     }
 
-    public Coords left()
-    {
+    public Coords left() {
         return new Coords(x - 1, y);
     }
 
-    public Coords right()
-    {
+    public Coords right() {
         return new Coords(x + 1, y);
     }
 
-    public Coords up()
-    {
+    public Coords up() {
         return new Coords(x, y - 1);
     }
 
-    public Coords down()
-    {
+    public Coords down() {
         return new Coords(x, y + 1);
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (obj == null)
             return false;
         Coords coords = (Coords) obj;
@@ -78,13 +67,11 @@ public class Coords extends Object {
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return (1000 * x) + y;
     }
 
-    public LinkedList<Coords> neighbours()
-    {
+    public LinkedList<Coords> neighbours() {
         LinkedList<Coords> n = new LinkedList<Coords>();
         n.add(this.left());
         n.add(this.up());

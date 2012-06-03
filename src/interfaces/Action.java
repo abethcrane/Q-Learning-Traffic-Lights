@@ -8,8 +8,7 @@ Gill Morris
 Nathan Wilson
 */
 
-public interface Action
-{
+public interface Action {
     public boolean action();
 
     public int actionInt();
