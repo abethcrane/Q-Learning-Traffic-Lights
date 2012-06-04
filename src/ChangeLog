@@ -1,3 +1,12 @@
+2012-06-04 --:--:-- Gill <gmail gillemorris>
+	Updating a bunch of interfaces; hopefully reduce the complexity
+	sufficiently that variable lanes, turning traffic, etc can be
+	implemented reasonably easily.
+
+	* interfaces/Car.java: 
+	    - merged updateVelocity and updatePosition into move
+	    - removed stopped and getChar
+
 2012-06-04 12:18:38 Gill <gmail gillemorris>
 	* Makefile: now uses restored package heirarchy
 

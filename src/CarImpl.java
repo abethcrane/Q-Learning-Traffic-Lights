@@ -25,8 +25,7 @@ public class CarImpl implements Car {
             startingVelocity.getXSpeed(), startingVelocity.getYSpeed());
     }
 
-    @Override
-    public void updateVelocity(TrafficLight l, RoadMap m) {
+    public void move(TrafficLight l, RoadMap m) {
         boolean greenLight = 
                 l.getDelay() == 0 &&
                 l.horizontalGreen() == (direction.getYSpeed() == 0) &&
@@ -36,15 +35,11 @@ public class CarImpl implements Car {
                 m.nextNonCarSquareIsTrafficLight(position,direction,l);
         velocity.setXSpeed(stop ? 0 : direction.getXSpeed());
         velocity.setYSpeed(stop ? 0 : direction.getYSpeed());
-    }
-
-    @Override
-    public void updatePosition() {
+        
         position.setX(position.getX() + velocity.getXSpeed());
         position.setY(position.getY() + velocity.getYSpeed());
     }
 
-    @Override
     public Coords getCoords() {
          return position;
     }
@@ -53,28 +48,7 @@ public class CarImpl implements Car {
         return direction;
     }
 
-    @Override
-    public boolean hasLeftMap(RoadMap map) {
-        return
-            position.getX() < 0 || position.getX() >= 60 ||
-            position.getY() < 0 || position.getY() >= 60;
-    }
-
-    @Override
-    public char getChar() {
-        if (direction.getXSpeed() == -1) {
-            return '^';
-        }  else if (direction.getXSpeed() == 1) {
-            return 'v';
-        } else if (direction.getYSpeed() == -1) {
-            return '<';
-        } else {
-            return '>';
-        }
-    }
-
-    @Override
-    public boolean stopped() {
-        return velocity.getXSpeed() == 0 && velocity.getYSpeed() == 0;
+    public Velocity getVelocity() {
+        return velocity;
     }
 }

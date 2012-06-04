@@ -36,6 +36,11 @@ public class LearningModuleImpl implements LearningModule {
         this.epsilon = epsilon;
     }
 
+    private boolean stoppedCar(Car c) {
+        Velocity v = c.getVelocity();
+        return v.getXSpeed() == 0 && v.getYSpeed() == 0;
+    }
+
     @Override
     public List<Boolean> updateTrafficLights(
             RoadMap r, List<TrafficLight> trafficLights, int timeRan) {
@@ -280,7 +285,7 @@ public class LearningModuleImpl implements LearningModule {
     public int reward4(List<Car> cars, TrafficLight light) {
         int numStopped = 0, hasSwitched = 0;
         for (Car car : cars) {
-            if (car.stopped()) {
+            if (stoppedCar(car)) {
                 numStopped++;
             }
         }

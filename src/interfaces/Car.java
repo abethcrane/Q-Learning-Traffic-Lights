@@ -1,10 +1,3 @@
-package interfaces;
-
-import interfaces.TrafficLight;
-import utils.*;
-
-import java.util.List;
-
 /*
 COMP9417 Machine Learning
 Major Project - Traffic Lights Reinforcement Learning
@@ -12,24 +5,24 @@ Beth Crane
 Gill Morris
 Nathan Wilson
 */
+
+package interfaces;
+
+import utils.Velocity;
+import utils.Coords;
+
 public interface Car {
-    //Updates the velocity of a car given whether the traffic light 
-    //is immediately in front and is red
-    void updateVelocity(TrafficLight trafficLight, RoadMap mapWithCars);
+    // tells the car to continue its journey. it should make up its
+    // own mind where its going, whether changing lanes is a good idea,
+    // etc.
+    void move(TrafficLight l, RoadMap m);
 
-    //Updates the position of the car by incrementing x/y by velocity
-    void updatePosition();
-
+    // returns a value in Z+_2 indicating the car's location
     Coords getCoords();
 
-    //the direction the car would like to be going.
-    //note that this is nonzero even if stopped at a light
+    // the direction the car would like to be going.
+    // note that this is nonzero even if stopped at a light
     Velocity getDirection();
 
-    //whether the car is on the given map
-    boolean hasLeftMap(RoadMap map);
-
-    char getChar();
-
-    boolean stopped();
+    Velocity getVelocity();
 }

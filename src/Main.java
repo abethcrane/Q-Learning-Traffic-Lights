@@ -125,14 +125,12 @@ public class Main {
             //Move cars currently on map
             List<Car> carsToRemove = new ArrayList<Car>();
             for (Car car : cars) {
-                car.updateVelocity(
-                    currentState.getClosestTrafficLight(
-                        car, trafficLights
-                    ), 
-                    nextState
-                );
-                car.updatePosition();
-                if (car.hasLeftMap(map)) {
+                car.move(
+                        currentState.getClosestTrafficLight(
+                                car, trafficLights),
+                        nextState);
+                int x=car.getCoords().getX(), y=car.getCoords().getY();
+                if (x<0 || x>=60 || y<0 || y>=60) {
                      carsToRemove.add(car);
                 }
             }
@@ -158,7 +156,9 @@ public class Main {
             iterations++;
             int localCarsStopped = 0;
             for (Car car : cars) {
-                if (car.stopped()) {
+                int dx = car.getVelocity().getXSpeed();
+                int dy = car.getVelocity().getYSpeed();
+                if (dx == 0 && dy == 0) {
                     localCarsStopped++;
                 }
             }
@@ -210,7 +210,9 @@ public class Main {
                     } catch (Exception ignored) {}
                 }
                 for (Car c : cars) {
-                    score += c.stopped() ? -1 : 0;
+                int dx = c.getVelocity().getXSpeed();
+                int dy = c.getVelocity().getYSpeed();
+                    score += dx==0&&dy==0 ? -1 : 0;
                 }
             }
         }
