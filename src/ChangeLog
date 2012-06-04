@@ -1,3 +1,6 @@
+2012-06-04 12:18:38 Gill <gmail gillemorris>
+	* Makefile: now uses restored package heirarchy
+
 2012-06-03 20:37:51 Gill <gmail gillemorris>
 	* Main.java: minor changes; can pass RL parameters in as arguments
 	* interfaces/LearningModule.java: ""
