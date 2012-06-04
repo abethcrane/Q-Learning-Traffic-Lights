@@ -5,7 +5,7 @@ This program is designed to simulate a number of road intersections and learn th
 
 == Running the Program ==
 
-Once all the files have been downloaded type ‘make’ and then type ‘Java Main [rewardNum intensity]’
+Once all the files have been downloaded type `make' and then type `Java Main [rewardNum intensity]'
 
 The two arguments are optional but both or neither are required. 
 The first is rewardNum, which is 1-3, and allows you to trial the three reward functions we experimented with.
