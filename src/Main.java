@@ -23,24 +23,20 @@ public class Main {
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
         double trafficIntensity = 0.2;
+        int score = 0;
 
         //Initialise map, list of cars currently on map, and list of 
         //trafficlights
         RoadMap map = new RoadMapImpl();
         List<Car> cars = new ArrayList<Car>();
-        List<TrafficLight> trafficLights = 
-                new ArrayList<TrafficLight>();
-        trafficLights.add(
-                new TrafficLightImpl(new Coords(20, 20),false));
-        trafficLights.add(
-                new TrafficLightImpl(new Coords(20, 40),true));
-        trafficLights.add(
-                new TrafficLightImpl(new Coords(40, 20),true));
-        trafficLights.add(
-                new TrafficLightImpl(new Coords(40, 40),false));
+        List<TrafficLight> lights = new ArrayList<TrafficLight>();
+        lights.add(new TrafficLightImpl(new Coords(20, 20), false));
+        lights.add(new TrafficLightImpl(new Coords(20, 40), true));
+        lights.add(new TrafficLightImpl(new Coords(40, 20), true));
+        lights.add(new TrafficLightImpl(new Coords(40, 40), false));
 
         //Set actionposition based on arg1
-        LearningModule learningModule = new LearningModuleImpl();
+        LearningModule learner = new LearningModuleImpl();
         Viewer v = graphicalOutput ? new Viewer() : null;
 
         //Basic logic for each time step
@@ -52,6 +48,43 @@ public class Main {
         // - Now that we have the new state, update the qvalue for the
         //  previous s,a pair
         for (int t = 0; t < runTime; ++t) {
+            
+            RoadMap curState = map.copyMap();
+            curState.addCars(cars);
+            RoadMap nextState = curState.copyMap();
+
+            for (TrafficLight l : lights) {
+                if (learner.decide(curState, l)) {
+                    l.switchLight();
+                }
+            }
+
+            List<Car> toRemove = new ArrayList<Car>();
+            for (Car c : cars) {
+                c.move(
+                    curState.getClosestTrafficLight(
+                        c, lights),
+                    nextState);
+                int x = c.getCoords().getX(), y = c.getCoords().getY();
+                if (x < 0 || x >= 60 || y < 0 || y >= 60) {
+                    toRemove.add(c);
+                }
+            }
+            cars.removeAll(toRemove);
+
+            for (Coords e : map.getRoadEntrances()) {
+                double r = Math.random();
+                if (r <= trafficIntensity && !curState.carAt(e)) {
+                    cars.add(new CarImpl(
+                        new Coords(e), map.getStartingVelocity(e)));
+                }
+            }
+
+            for (TrafficLight l : lights) {
+                learner.learn(l, curState, nextState);
+            }
+
+            /* OLD CODE: WORKS FINE WITH OLD ROADMAP
             //Params required to learn
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
@@ -61,13 +94,13 @@ public class Main {
             List<Integer> rewards = new ArrayList<Integer>();
 
             //Save the states of each traffic light before updating
-            for (TrafficLight light: trafficLights) {
+            for (TrafficLight light : lights) {
                 states.add(currentState.stateCode(light));
             }
 
             //Use the learned values to update the traffic lights
             switchedLights = learningModule.updateTrafficLights(
-                    currentState, trafficLights, t
+                    currentState, lights, t
             );
 
             //copy updated state of map
@@ -78,7 +111,7 @@ public class Main {
             for (Car car : cars) {
                 car.move(
                         currentState.getClosestTrafficLight(
-                                car, trafficLights),
+                                car, lights),
                         nextState);
                 int x=car.getCoords().getX(), y=car.getCoords().getY();
                 if (x<0 || x>=60 || y<0 || y>=60) {
@@ -104,7 +137,7 @@ public class Main {
 
             // Updates q-values
             //calculate reward and state code for each traffic light
-            for (TrafficLight light : trafficLights) {
+            for (TrafficLight light : lights) {
                 rewards.add(learningModule.reward(
                         nextState.stateCode(light)));
                 nextStates.add(nextState.stateCode(light));
@@ -114,22 +147,34 @@ public class Main {
             //the previous state and action
             learningModule.learn(
                 states, switchedLights, rewards, nextStates, 
-                trafficLights
+                lights
             );
+            */
 
             if (t >= quietTime) {
                 if (graphicalOutput) {
-                    v.view(map, cars, trafficLights);
+                    v.view(map, cars, lights);
                 }
                 if (consoleOutput) {
-                    map.print(cars, trafficLights);
+                    map.print(cars, lights);
                 }
                 if (output) {
                     try {
                         Thread.sleep(500);
-                    } catch (Exception ignored) {}
+                    } catch (Exception e) {
+                        System.err.println("Unable to sleep.");
+                    }
+                }
+                for (Car c : cars) {
+                    int dx = c.getVelocity().getXSpeed();
+                    int dy = c.getVelocity().getYSpeed();
+                    score += dx == 0 && dy == 0 ? -1 : 0;
                 }
             }
+            for (TrafficLight l : lights) {
+                l.clock();
+            }
         }
+        System.out.println("Score " + (float)score/(runTime-quietTime));
     }
 }

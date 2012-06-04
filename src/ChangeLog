@@ -2,9 +2,11 @@
 	todo:
 	standardize state/reward function
 
-	* Main.java: no longer tells LearningModuleImpl how it's 
-	    supposed to learn -- yay!
-	
+	created Road/Intersect classes. haven't done much in the way of
+	using them
+
+	* Main.java: no longer manages half of LearnerModuleImpl's
+	    implementation -- yay!
 
 2012-06-04 15:43:31 Gill <gmail gillemorris>
 	Updating a bunch of interfaces; hopefully reduce the complexity

@@ -41,12 +41,12 @@ public class RoadMapImpl implements RoadMap {
         grid = new char[gridSize][gridSize];
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                grid[j][i] = 'x';
+                grid[i][j] = 'x';
                 for (Coords k : roadEntrances) {
-                    if ((0 < i && i < gridSize-1 && i == k.getX()) || 
-                        (0 < j && j < gridSize-1 && j == k.getY()))
+                    if ((0 < i && i < gridSize-1 && i == k.getY()) || 
+                        (0 < j && j < gridSize-1 && j == k.getX()))
                     {
-                        grid[j][i] = roadChar;
+                        grid[i][j] = roadChar;
                     }
                 }
             }

@@ -40,6 +40,13 @@ public class LearningModuleImpl implements LearningModule {
         return v.getXSpeed() == 0 && v.getYSpeed() == 0;
     }
 
+    public boolean decide(RoadMap m, TrafficLight l) {
+        return Math.random() < 0.1;
+    }
+
+    public void learn(TrafficLight l, RoadMap s, RoadMap sPrime) {
+    }
+
     @Override
     public List<Boolean> updateTrafficLights(
             RoadMap r, List<TrafficLight> trafficLights, int timeRan) {
@@ -82,6 +89,7 @@ public class LearningModuleImpl implements LearningModule {
         return switched;
     }
 
+    /*
     @Override
     public void learn(
             List<Integer> pastStates, List<Boolean> switches, 
@@ -113,6 +121,7 @@ public class LearningModuleImpl implements LearningModule {
             );
         }
     }
+    */
 
     public Float getMaxQValue (int state) {
         Float q1 = qValues.get(state + actionPosition);
