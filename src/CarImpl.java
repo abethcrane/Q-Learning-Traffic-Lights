@@ -1,4 +1,5 @@
 import interfaces.Car;
+import interfaces.Road;
 import interfaces.RoadMap;
 import interfaces.TrafficLight;
 import utils.Coords;
@@ -14,17 +15,14 @@ Gill Morris
 Nathan Wilson
 */
 public class CarImpl implements Car {
-    //private Coords position;
+    private Road road;
+    private int lane;
+    private int distAlongRoad;
     private int velocity;
-    //private Velocity direction; // desired velocity (if no light)
-
-    public int lane;
-    public RoadImpl r;
-    public int distAlongRoad;
     
-    public CarImpl(RoadImpl r, int lane, int startingVelocity) {
-        this.r = new RoadImpl(r.lanes(), r.length());
-        this.velocity = startingVelocity;
+    public CarImpl(Road r, int lane, int v0) {
+        this.road = new RoadImpl(r.lanes(), r.length());
+        this.velocity = v0;
         this.lane = lane;
         this.distAlongRoad = 0;
     }
@@ -59,11 +57,11 @@ public class CarImpl implements Car {
     	return distAlongRoad;
     }
 
-    public int getVelocity() {
+    public int velocity() {
         return velocity;
     }
     
-    public RoadImpl getRoad() {
-    	return r;
+    public Road road() {
+    	return road;
     }
 }

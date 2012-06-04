@@ -38,7 +38,7 @@ public class Main {
 
         //Set actionposition based on arg1
         LearningModule learner = new LearningModuleImpl();
-        Viewer v = graphicalOutput ? new Viewer() : null;
+        // FIXME Viewer v = graphicalOutput ? new Viewer() : null;
 
         Random rand = new Random();        
         
@@ -76,7 +76,8 @@ public class Main {
                 double r = Math.random();
                 if (r <= trafficIntensity && !curState.carAt(e)) {
                     cars.add(new CarImpl(
-                        road, rand.nextInt(road.lanes()), map.getStartingVelocity(e)));
+                        road, rand.nextInt(road.lanes()), 
+                        map.getStartingVelocity(e)));
                 }
             }
 

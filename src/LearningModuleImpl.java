@@ -7,58 +7,53 @@
 */
 
 import interfaces.*;
-
 import java.util.*;
-
 import utils.*;
 
 public class LearningModuleImpl implements LearningModule {
-    private static final int numCarSpaces = 9;
-    private static final int numActions = 2;
-    private static final int numRoads = 2;
-    private static final int numTrafficLights = 2;
-    private float epsilon = (float)0.1;
-    private float gamma = (float)0.9;
-    private float alpha = (float)0.7;
-    private Map<Integer, Float> qValues = new HashMap<Integer, Float>();
-    private ActionImpl[] actions = new ActionImpl[numActions];
-    private float id = (float)-0.0;
-    private int actionPosition = 1000; // action is a___ in stateCode 2, 
-                                       // in stateCode3 its a_____
-   // private List<Action> lastActions = new LinkedList<Action>();
+    private static final int nStates = 1000, nActions = 2;
+    private double alpha = 0.7, gamma = 0.9, epsilon = 0.1;
+    private double[] q;
+    private int[] lastAction;
+
     LearningModuleImpl() {
-        actions[0] = new ActionImpl(false);
-        actions[1] = new ActionImpl(true);
+        lastAction = new int[nStates];
+        q = new double[nStates];
+        for (int i = 0; i < nStates; ++i) {
+            q[i] = 0;
+        }
     }
 
-    public void setRLParam(float alpha, float gamma, float epsilon) {
+    public void setRLParam(double alpha, double gamma, double epsilon) {
         this.alpha = alpha;
         this.gamma = gamma;
         this.epsilon = epsilon;
     }
 
     private boolean stoppedCar(Car c) {
-        return c.getVelocity() == 0;
+        return c.velocity() == 0;
     }
 
-    public boolean decide(RoadMap m, TrafficLight l) {
-    	Action a = new ActionImpl();
-    	a = getAction(m, l);
-    	//lastActions.add(a);
-        return a.action();//make this function an int
+    public int decide(RoadMap m, TrafficLight l) {
+        int s = m.stateCode(l);
+        int bestAction = 0;
+        double bestQ = -100;
+        for (int i = 0; i < nActions; ++i) {
+            if (q[10*s + i] > bestQ) {
+                bestQ = q[10*s + i];
+                bestAction = i;
+            }
+        }
+        lastAction[s] = bestQ;
+        return bestAction;
     }
 
     public void learn(Intersect l, RoadMap oldMap, RoadMap currentMap) {
-    	updateAlpha();
-    	// relies on main calling traffic lights in the same order
-    	boolean a = l.getDelay() == 2;
-    	int intA = a ?1:0;
-    	int s = stateCode(l,oldMap);
-    	int sPrime = stateCode(l,currentMap);
-	    //use old hashcode and current state
-	        //for each traffic light we get the state code, action, 
-	        //reward and old qvalue
-	        int reward = reward(sPrime);
+    	int s = stateCode(l, oldMap);
+    	int sPrime = stateCode(l, currentMap);
+        int a = lastAction[s];
+        int reward = reward(sPrime);
+        double qVal = q[nActions*s + a]; /* MARKER */
 	        Float qVal = qValues.get(
 	                s + actionPosition*intA);
 	        if (qVal == null) {
@@ -76,18 +71,17 @@ public class LearningModuleImpl implements LearningModule {
     }
     
     public int stateCode(Intersect l, RoadMap m) {
-    	//return r.stateCode(l);
-    	l.lightSetting().toString; //convert the boolean array to a decimal number
-    	int ret = l.lightSetting()? 1:0;
+        int ret = l.lightSetting();
     	for (int i = 0; i < l.in().size(); ++i) {
     		Road r = l.in().get(i);
     		int closestCar = 9;
-    		for (Car c: m.carsOn(r)) {
-    			closestCar = Math.min(closestCar,  r.length()-c.distAlongRoad());
+    		for (Car c : m.carsOn(r)) {
+    			closestCar = Math.min(closestCar,  
+                    r.length()-c.distAlongRoad());
     		}
     		ret += Math.pow(10, i+2)*closestCar;
     	}
-    	return 0;
+    	return ret;
     }
     
 /*
@@ -117,7 +111,8 @@ public class LearningModuleImpl implements LearningModule {
         }
         return switches;
     }
-*/// NOT USED
+*/
+    /*
     @Override
     public List<Boolean> updateTrafficLightsRandomly(
             RoadMap mapWithCars, List<TrafficLight> trafficLights) {
@@ -130,6 +125,7 @@ public class LearningModuleImpl implements LearningModule {
         }
         return switched;
     }
+    */
 
     /*
     @Override
@@ -165,6 +161,7 @@ public class LearningModuleImpl implements LearningModule {
     }
     */
 
+    /*
     public Float getMaxQValue (int state) {
         Float q1 = qValues.get(state + actionPosition);
         if (q1 == null) {
@@ -178,7 +175,9 @@ public class LearningModuleImpl implements LearningModule {
 
         return Math.max(q1, q2);
     }
+    */
 
+    /*
     //Reward -1.0 if a car is stopped at a red light on either road, 
     //zero otherwise.
     public int reward(int stateCode) {
@@ -208,7 +207,9 @@ public class LearningModuleImpl implements LearningModule {
 
         return rewardNum;
     }
+    */
 
+    /*
     //Reward -1*numCars stopped at a red light, + numCars queued up
     //going through a greenlight
     public int reward2(int stateCode) {
@@ -332,6 +333,7 @@ public class LearningModuleImpl implements LearningModule {
 
     //naive implementation of reward where you are penalised for 
     //each stopped car;
+    /*
     public int reward4(List<Car> cars, TrafficLight light) {
         int numStopped = 0, hasSwitched = 0;
         for (Car car : cars) {
@@ -344,10 +346,12 @@ public class LearningModuleImpl implements LearningModule {
         }
         return Math.round((float)(-0.1) * (numStopped+10*hasSwitched));
     }
+    */
 
 
 
-    public Action getAction(RoadMap r, TrafficLight t) {
+    /*
+    private Action getAction(RoadMap r, TrafficLight t) {
         ActionImpl a;
 
         double highestQ = -100;
@@ -375,10 +379,5 @@ public class LearningModuleImpl implements LearningModule {
 
         return highestAction;
     }
-
-    public void updateAlpha () {
-        // potentially update ALPHA
-        alpha = alpha;
-    }
-
+    */
 }
