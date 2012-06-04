@@ -14,17 +14,21 @@ Gill Morris
 Nathan Wilson
 */
 public class CarImpl implements Car {
-    private Coords position;
-    private Velocity velocity;
-    private Velocity direction; // desired velocity (if no light)
+    //private Coords position;
+    private int velocity;
+    //private Velocity direction; // desired velocity (if no light)
 
-    public CarImpl(Coords position, Velocity startingVelocity) {
-        this.position = position;
+    public int lane;
+    public RoadImpl r;
+    public int distAlongRoad;
+    
+    public CarImpl(RoadImpl r, int lane, int startingVelocity) {
+        this.r = new RoadImpl(r.lanes(), r.length());
         this.velocity = startingVelocity;
-        this.direction = new Velocity(
-            startingVelocity.getXSpeed(), startingVelocity.getYSpeed());
+        this.lane = lane;
+        this.distAlongRoad = 0;
     }
-
+/*
     public void move(TrafficLight l, RoadMap m) {
         boolean greenLight = 
                 l.getDelay() == 0 &&
@@ -39,16 +43,27 @@ public class CarImpl implements Car {
         position.setX(position.getX() + velocity.getXSpeed());
         position.setY(position.getY() + velocity.getYSpeed());
     }
-
-    public Coords getCoords() {
+*/
+    public void move() {
+    	distAlongRoad += velocity;
+    }
+    /*public Coords getCoords() {
          return position;
     }
 
     public Velocity getDirection() {
         return direction;
+    }*/
+    
+    public int distAlongRoad() {
+    	return distAlongRoad;
     }
 
-    public Velocity getVelocity() {
+    public int getVelocity() {
         return velocity;
+    }
+    
+    public RoadImpl getRoad() {
+    	return r;
     }
 }

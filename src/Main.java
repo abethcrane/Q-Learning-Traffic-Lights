@@ -13,6 +13,7 @@ import interfaces.TrafficLight;
 import utils.Coords;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
     public static void main (String[] args) {
@@ -39,6 +40,8 @@ public class Main {
         LearningModule learner = new LearningModuleImpl();
         Viewer v = graphicalOutput ? new Viewer() : null;
 
+        Random rand = new Random();        
+        
         //Basic logic for each time step
         // - change traffic lights if required - call a function from 
         //   'learning' class to do this
@@ -54,19 +57,16 @@ public class Main {
             RoadMap nextState = curState.copyMap();
 
             for (TrafficLight l : lights) {
-                if (learner.decide(curState, l)) {
-                    l.switchLight();
-                }
+            	l.switchLight(learner.decide(curState, l));
             }
 
             List<Car> toRemove = new ArrayList<Car>();
             for (Car c : cars) {
-                c.move(
-                    curState.getClosestTrafficLight(
-                        c, lights),
-                    nextState);
-                int x = c.getCoords().getX(), y = c.getCoords().getY();
-                if (x < 0 || x >= 60 || y < 0 || y >= 60) {
+                //c.move(curState.getClosestTrafficLight(c, lights), nextState);
+            	c.move();
+                //int x = c.getCoords().getX(), y = c.getCoords().getY();
+                //if (x < 0 || x >= 60 || y < 0 || y >= 60) {
+            	if (c.distAlongRoad() == c.getRoad().length()) {
                     toRemove.add(c);
                 }
             }
@@ -76,7 +76,7 @@ public class Main {
                 double r = Math.random();
                 if (r <= trafficIntensity && !curState.carAt(e)) {
                     cars.add(new CarImpl(
-                        new Coords(e), map.getStartingVelocity(e)));
+                        road, rand.nextInt(road.lanes()), map.getStartingVelocity(e)));
                 }
             }
 
@@ -156,7 +156,7 @@ public class Main {
                     v.view(map, cars, lights);
                 }
                 if (consoleOutput) {
-                    map.print(cars, lights);
+                    //map.print(cars, lights);
                 }
                 if (output) {
                     try {
@@ -166,9 +166,7 @@ public class Main {
                     }
                 }
                 for (Car c : cars) {
-                    int dx = c.getVelocity().getXSpeed();
-                    int dy = c.getVelocity().getYSpeed();
-                    score += dx == 0 && dy == 0 ? -1 : 0;
+                    score += c.getVelocity() == 0 ? -1 : 0;
                 }
             }
             for (TrafficLight l : lights) {

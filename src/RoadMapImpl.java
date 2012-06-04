@@ -58,7 +58,7 @@ public class RoadMapImpl implements RoadMap {
         Collections.addAll(roadEntrances, defaultEntrances);
     }
 
-    @Override
+   /* @Override
     public void print(List<Car> cars, List<TrafficLight> trafficLights){
         //copy grid and place cars onto it
         char[][] newGrid = copyGrid(grid);
@@ -88,9 +88,9 @@ public class RoadMapImpl implements RoadMap {
             System.out.println();
         }
         System.out.println();
-    }
+    }*/
 
-    // Hash = 4 digit number (longer if more roads are added)
+    // Hash = 3 digit number (longer if more roads are added)
     /*
     1st - Num cars with velocity 0 on road 1
     2nd - Num cars with velocity 0 on road 2
@@ -235,7 +235,7 @@ public class RoadMapImpl implements RoadMap {
         return hash;
     }
 
-    @Override
+    //@Override
     // Hash = 5 digit number (longer if more roads are added)
     //
     //  1st - boolean of roomToCrossIntersection for road 1
@@ -247,7 +247,7 @@ public class RoadMapImpl implements RoadMap {
     //  5th - light setting (ie 0-green, 1 red for one of the roads)
     // Needs to take in traffic light so it can tell which one to work
     // the things out for
-    public int stateCode3(TrafficLight t, List<Car> cars) {
+   /* public int stateCode3(TrafficLight t, List<Car> cars) {
         int hash = 0;
         boolean room = true;
         
@@ -364,7 +364,7 @@ public class RoadMapImpl implements RoadMap {
         	room = true;
         }    
         return hash;
-    }
+    }*/
     
     
     @Override
@@ -388,6 +388,7 @@ public class RoadMapImpl implements RoadMap {
         return blankRoadTiles >= 4;
     }
 
+    /*
     @Override
     public TrafficLight getClosestTrafficLight(
             Car car, List<TrafficLight> trafficLights
@@ -409,7 +410,7 @@ public class RoadMapImpl implements RoadMap {
             coords.setY(coords.getY() + car.getDirection().getYSpeed());
         }
         return trafficLights.get(0);
-    }
+    }*/
 
     @Override
     public List<Coords> getRoadEntrances() {
@@ -430,13 +431,14 @@ public class RoadMapImpl implements RoadMap {
         return new RoadMapImpl(grid);
     }
 
+    /*
     @Override
     public void addCars(List<Car> cars) {
         for (Car c : cars)
         {
             grid[c.getCoords().getY()][c.getCoords().getX()] = carChar;
         }
-    }
+    }*/
 
     @Override
     public boolean nextNonCarSquareIsTrafficLight(

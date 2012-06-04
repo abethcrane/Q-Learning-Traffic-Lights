@@ -15,7 +15,7 @@ import java.util.List;
 //Roadmap Interface - contains a representation of the road and intersections
 public interface RoadMap {
     //Prints a representation of the map to screen
-    void print(List<Car> cars, List<TrafficLight> trafficLights);
+    //void print(List<Car> cars, List<TrafficLight> trafficLights);
 
     //returns a list of the coordinates of all road entrances
     List<Coords> getRoadEntrances();
@@ -27,7 +27,7 @@ public interface RoadMap {
     RoadMap copyMap();
 
     //add cars from the given list onto the map
-    void addCars(List<Car> cars);
+    //void addCars(List<Car> cars);
 
     //returns true if the next unoccupied square in the direction of
     //'direction' from the position 'start' is a traffic light
@@ -50,11 +50,11 @@ public interface RoadMap {
 	// A variant on the stateCode
 	// Instead of storing the closet car position for each road, it counts how many are stopped on each road
 	// And also if cars can move across a road
-	int stateCode3(TrafficLight t, List<Car> cars);	
+	//int stateCode3(TrafficLight t, List<Car> cars);	
 	
     //returns true if there is room for a car at p to cross the intersection in a direction
     //calculates by counting blank squares thirteen tiles from position
     boolean roomToCrossIntersection(Coords position, Velocity direction, TrafficLight l);
 
-    TrafficLight getClosestTrafficLight(Car car, List<TrafficLight> trafficLights);
+    //TrafficLight getClosestTrafficLight(Car car, List<TrafficLight> trafficLights);
 }

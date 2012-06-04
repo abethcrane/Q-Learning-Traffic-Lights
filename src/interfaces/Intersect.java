@@ -15,4 +15,9 @@ public interface Intersect {
     List<Road> in();
 
     List<Road> out();
+    
+    boolean[] lightSetting();
+    int getDelay();
+    void clock();
+    void switchLight(boolean newAction[]);
 }

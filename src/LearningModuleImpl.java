@@ -7,7 +7,9 @@
 */
 
 import interfaces.*;
+
 import java.util.*;
+
 import utils.*;
 
 public class LearningModuleImpl implements LearningModule {
@@ -23,7 +25,7 @@ public class LearningModuleImpl implements LearningModule {
     private float id = (float)-0.0;
     private int actionPosition = 1000; // action is a___ in stateCode 2, 
                                        // in stateCode3 its a_____
-
+   // private List<Action> lastActions = new LinkedList<Action>();
     LearningModuleImpl() {
         actions[0] = new ActionImpl(false);
         actions[1] = new ActionImpl(true);
@@ -36,19 +38,61 @@ public class LearningModuleImpl implements LearningModule {
     }
 
     private boolean stoppedCar(Car c) {
-        Velocity v = c.getVelocity();
-        return v.getXSpeed() == 0 && v.getYSpeed() == 0;
+        return c.getVelocity() == 0;
     }
 
     public boolean decide(RoadMap m, TrafficLight l) {
-        return Math.random() < 0.1;
+    	Action a = new ActionImpl();
+    	a = getAction(m, l);
+    	//lastActions.add(a);
+        return a.action();//make this function an int
     }
 
-    public void learn(TrafficLight l, RoadMap s, RoadMap sPrime) {
+    public void learn(Intersect l, RoadMap oldMap, RoadMap currentMap) {
+    	updateAlpha();
+    	// relies on main calling traffic lights in the same order
+    	boolean a = l.getDelay() == 2;
+    	int intA = a ?1:0;
+    	int s = stateCode(l,oldMap);
+    	int sPrime = stateCode(l,currentMap);
+	    //use old hashcode and current state
+	        //for each traffic light we get the state code, action, 
+	        //reward and old qvalue
+	        int reward = reward(sPrime);
+	        Float qVal = qValues.get(
+	                s + actionPosition*intA);
+	        if (qVal == null) {
+	            qVal = id;
+	        }
+	
+	        //calculate new
+	        Float newQValue = 
+	                ((1 - alpha) * qVal) + 
+	                alpha*(reward + (gamma * getMaxQValue(sPrime)));
+	        qValues.put(
+	                (s + actionPosition*intA), 
+	                newQValue
+	        );
     }
-
+    
+    public int stateCode(Intersect l, RoadMap m) {
+    	//return r.stateCode(l);
+    	l.lightSetting().toString; //convert the boolean array to a decimal number
+    	int ret = l.lightSetting()? 1:0;
+    	for (int i = 0; i < l.in().size(); ++i) {
+    		Road r = l.in().get(i);
+    		int closestCar = 9;
+    		for (Car c: m.carsOn(r)) {
+    			closestCar = Math.min(closestCar,  r.length()-c.distAlongRoad());
+    		}
+    		ret += Math.pow(10, i+2)*closestCar;
+    	}
+    	return 0;
+    }
+    
+/*
     @Override
-    public List<Boolean> updateTrafficLights(
+    public List<Integer> updateTrafficLights(
             RoadMap r, List<TrafficLight> trafficLights, int timeRan) {
         List<Boolean> switches = new ArrayList<Boolean>();
         // Less naive, using the optimal policy (i.e. best q-value)
@@ -73,7 +117,7 @@ public class LearningModuleImpl implements LearningModule {
         }
         return switches;
     }
-
+*/// NOT USED
     @Override
     public List<Boolean> updateTrafficLightsRandomly(
             RoadMap mapWithCars, List<TrafficLight> trafficLights) {
@@ -82,9 +126,7 @@ public class LearningModuleImpl implements LearningModule {
             double r = Math.random();
             boolean s = r <= 0.5;
             switched.add(s);
-            if (s) {
-                light.switchLight();
-            }
+            light.switchLight(s);
         }
         return switched;
     }
@@ -338,4 +380,5 @@ public class LearningModuleImpl implements LearningModule {
         // potentially update ALPHA
         alpha = alpha;
     }
+
 }
