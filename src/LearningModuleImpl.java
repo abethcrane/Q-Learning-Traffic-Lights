@@ -24,10 +24,9 @@ public class LearningModuleImpl implements LearningModule {
     private int actionPosition = 1000; // action is a___ in stateCode 2, 
                                        // in stateCode3 its a_____
 
-    LearningModuleImpl(int actionPosition) {
+    LearningModuleImpl() {
         actions[0] = new ActionImpl(false);
         actions[1] = new ActionImpl(true);
-        this.actionPosition = actionPosition;
     }
 
     public void setRLParam(float alpha, float gamma, float epsilon) {

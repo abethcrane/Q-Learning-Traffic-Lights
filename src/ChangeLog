@@ -1,4 +1,9 @@
 2012-06-04 --:--:-- Gill <gmail gillemorris>
+	todo:
+	standardize state/reward function
+
+	* Main.java: no longer tells LearningModuleImpl how it's 
+	    supposed to learn -- yay!
 	
 
 2012-06-04 15:43:31 Gill <gmail gillemorris>

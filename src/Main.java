@@ -16,41 +16,13 @@ import java.util.List;
 
 public class Main {
     public static void main (String[] args) {
-        // Inputting arguments, or defaulting to 
-        // reward 1 and intensity 0.25
-        Integer rewardFunction;
-        Double trafficIntensity;
-        int defaultRewardFunction = 1;
-        double defaultTrafficIntensity = 0.25;
-        if (args.length == 2) {
-            try {
-                rewardFunction = Integer.parseInt(args[0]);
-                trafficIntensity = Double.parseDouble(args[1]);
-            } catch (Exception e) {
-                rewardFunction = defaultRewardFunction;
-                trafficIntensity = defaultTrafficIntensity;
-                System.err.println("Defaulting to " +
-                        "reward " + defaultRewardFunction +
-                        " intensity " + defaultTrafficIntensity);
-            }
-        } else {
-            rewardFunction = defaultRewardFunction;
-            trafficIntensity = defaultTrafficIntensity;
-        }
-        
         //Graphics and runtime parameters
         int runTime = 50200;
         int quietTime = 50000;
         boolean graphicalOutput = true;
         boolean consoleOutput = false;
         boolean output = graphicalOutput || consoleOutput;
-        int score = 0;
-
-        //output parameters
-        long iterations = 0;
-        long totalCars = 0;
-        long totalCarsStopped = 0;
-        int maxCarsStopped = 0;
+        double trafficIntensity = 0.2;
 
         //Initialise map, list of cars currently on map, and list of 
         //trafficlights
@@ -68,17 +40,7 @@ public class Main {
                 new TrafficLightImpl(new Coords(40, 40),false));
 
         //Set actionposition based on arg1
-        int actionPosition = 1000;
-        switch (rewardFunction) {
-            case 1:
-                actionPosition = 1000;
-                break;
-            case 2:
-            case 3:
-                actionPosition = 100000;
-                break;
-            }
-        LearningModule learningModule = new LearningModuleImpl(actionPosition);
+        LearningModule learningModule = new LearningModuleImpl();
         Viewer v = graphicalOutput ? new Viewer() : null;
 
         //Basic logic for each time step
@@ -89,8 +51,7 @@ public class Main {
         // - spawn cars at extremities
         // - Now that we have the new state, update the qvalue for the
         //  previous s,a pair
-        int timeRan = 0;
-        for (timeRan = 0; timeRan < runTime; timeRan++) {
+        for (int t = 0; t < runTime; ++t) {
             //Params required to learn
             RoadMap currentState = map.copyMap();
             currentState.addCars(cars);
@@ -101,22 +62,12 @@ public class Main {
 
             //Save the states of each traffic light before updating
             for (TrafficLight light: trafficLights) {
-                switch (rewardFunction) {
-                    case 1:
-                        states.add(currentState.stateCode(light));
-                        break;
-                    case 2:
-                        states.add(currentState.stateCode2(light));
-                        break;
-                    case 3:
-                        states.add(currentState.stateCode3(light, cars));
-                        break;
-                }
+                states.add(currentState.stateCode(light));
             }
 
             //Use the learned values to update the traffic lights
             switchedLights = learningModule.updateTrafficLights(
-                    currentState, trafficLights, timeRan
+                    currentState, trafficLights, t
             );
 
             //copy updated state of map
@@ -147,47 +98,16 @@ public class Main {
                             map.getStartingVelocity(roadEntrance)
                     );
                     cars.add(c);
-                    totalCars ++;
                 }
             }
             nextState.addCars(cars);
 
-            //Update statistics
-            iterations++;
-            int localCarsStopped = 0;
-            for (Car car : cars) {
-                int dx = car.getVelocity().getXSpeed();
-                int dy = car.getVelocity().getYSpeed();
-                if (dx == 0 && dy == 0) {
-                    localCarsStopped++;
-                }
-            }
-            totalCarsStopped += localCarsStopped;
-            if (localCarsStopped > maxCarsStopped) {
-                maxCarsStopped = localCarsStopped;
-            }
-
             // Updates q-values
             //calculate reward and state code for each traffic light
             for (TrafficLight light : trafficLights) {
-                switch (rewardFunction) {
-                    case 1:
-                        rewards.add(learningModule.reward(
-                                nextState.stateCode(light)));
-                        nextStates.add(nextState.stateCode(light));
-                        break;
-                    case 2:
-                        rewards.add(learningModule.reward2(
-                                nextState.stateCode2(light)));
-                        nextStates.add(nextState.stateCode2(light));
-                        break;
-                    case 3:
-                        rewards.add(learningModule.reward3(
-                                nextState.stateCode3(light, cars)));
-                        nextStates.add(nextState.stateCode3(light, cars));
-                        break;
-                }
-
+                rewards.add(learningModule.reward(
+                        nextState.stateCode(light)));
+                nextStates.add(nextState.stateCode(light));
             }
 
             //Learn on the new state and reward with reference to 
@@ -197,7 +117,7 @@ public class Main {
                 trafficLights
             );
 
-            if (timeRan >= quietTime) {
+            if (t >= quietTime) {
                 if (graphicalOutput) {
                     v.view(map, cars, trafficLights);
                 }
@@ -209,29 +129,7 @@ public class Main {
                         Thread.sleep(500);
                     } catch (Exception ignored) {}
                 }
-                for (Car c : cars) {
-                int dx = c.getVelocity().getXSpeed();
-                int dy = c.getVelocity().getYSpeed();
-                    score += dx==0&&dy==0 ? -1 : 0;
-                }
             }
         }
-
-        System.out.println(
-                "Finished with an overall score of " +
-                (float) score/(runTime-quietTime) + 
-                " (higher is better, 0 best)");
-        System.out.println(
-                "Total number of cars on the road: " + 
-                totalCars);
-        System.out.println(
-                "Total number of time steps: " + 
-                iterations);
-        System.out.println(
-                "Average number of cars stopped at any one time: " + 
-                ((float)totalCarsStopped/(float)iterations));
-        System.out.println(
-                "Maximum number of cars stopped at any one time: " + 
-                maxCarsStopped);
     }
 }
