@@ -26,32 +26,10 @@ public class CarImpl implements Car {
         this.lane = lane;
         this.distAlongRoad = 0;
     }
-/*
-    public void move(TrafficLight l, RoadMap m) {
-        boolean greenLight = 
-                l.getDelay() == 0 &&
-                l.horizontalGreen() == (direction.getYSpeed() == 0) &&
-                m.roomToCrossIntersection(position, direction, l);
-        boolean stop =
-                !greenLight &&
-                m.nextNonCarSquareIsTrafficLight(position,direction,l);
-        velocity.setXSpeed(stop ? 0 : direction.getXSpeed());
-        velocity.setYSpeed(stop ? 0 : direction.getYSpeed());
-        
-        position.setX(position.getX() + velocity.getXSpeed());
-        position.setY(position.getY() + velocity.getYSpeed());
-    }
-*/
+
     public void move() {
     	distAlongRoad += velocity;
     }
-    /*public Coords getCoords() {
-         return position;
-    }
-
-    public Velocity getDirection() {
-        return direction;
-    }*/
     
     public int distAlongRoad() {
     	return distAlongRoad;
