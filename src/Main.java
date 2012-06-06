@@ -28,8 +28,12 @@ public class Main {
 
         RoadMap map = new RoadMapImpl();
         LearningModule learner = new LearningModuleImpl();
+        Viewer viewer = new Viewer(map);
         for (int t = 0; t < runTime; ++t) {
-            int n = map.intersections().size(), j = 0;
+            System.out.println("Time " + t);
+            List<Intersect> _ = map.intersections();
+            System.out.println("Intersections for " + map + " are " + _);
+            int n = _.size(), j = 0;
             int[] a = new int[n], s = new int[n], sp = new int[n];
 
             for (Intersect i : map.intersections()) {
